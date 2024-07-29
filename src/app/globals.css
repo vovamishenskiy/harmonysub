@@ -7,3 +7,7 @@
     text-wrap: balance;
   }
 }
+
+.h-100vh-24px {
+  height: calc(100vh - 24px);
+}

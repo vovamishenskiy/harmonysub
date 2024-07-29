@@ -8,7 +8,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     return (
-        <aside className="flex flex-col h-screen w-64 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
+        <aside className="flex flex-col h-100vh-24px w-64 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
             <nav className="flex-grow">
                 <ul>
                     <li className="mb-6">
@@ -38,6 +38,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                 </ul>
             </nav>
             <div className="mb-auto">
+                <div className="flex flex-row items-center w-full mb-6 ml-1.5">
+                    {/* TODO: добавить аватар пользователя из Vercel Blob и username */}
+                    <UserCircleIcon className="h-6 w-6 mr-3"/>
+                    Пользователь
+                </div>
                 <button className="flex items-center w-full p-2 text-left hover:bg-emerald-700 rounded-md transition ease-in-out" onClick={onLogout}>
                     <ArrowLeftEndOnRectangleIcon className="h-6 w-6 mr-3" />
                     Выход
