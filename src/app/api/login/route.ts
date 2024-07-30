@@ -41,10 +41,9 @@ export async function POST(req: NextRequest) {
       path: '/'
     });
 
-    const headers = new Headers();
-    headers.append('Set-Cookie', cookie);
-
-    return NextResponse.json({ message: 'Login successful', avatar_url: user.avatar_url, username: user.username }, { status: 200, headers });
+    const response = NextResponse.json({ message: 'Login successful', avatar_url: user.avatar_url, username: user.username }, { status: 200, headers: { 'Set-Cookie': cookie } });
+    response.headers.set('Set-Cookie', cookie);
+    return response;
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
