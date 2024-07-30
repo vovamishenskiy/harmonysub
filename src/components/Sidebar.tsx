@@ -8,7 +8,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     return (
-        <aside className="flex flex-col h-100vh-24px w-64 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
+        <aside className="flex flex-col h-100vh-24px w-1/6 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
             <nav className="flex-grow">
                 <ul>
                     <li className="mb-6">
