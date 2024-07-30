@@ -1,3 +1,4 @@
+// app/api/setupDatabase/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
       )
     `;
 
-    // Создание триггера для обновления поля updated_at
+    // Создание функции обновления поля updated_at
     await sql`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
@@ -31,7 +32,10 @@ export async function GET(req: NextRequest) {
         RETURN NEW;
       END;
       $$ LANGUAGE 'plpgsql';
+    `;
 
+    // Создание триггера для таблицы users
+    await sql`
       CREATE TRIGGER update_users_updated_at
       BEFORE UPDATE ON users
       FOR EACH ROW
@@ -55,7 +59,7 @@ export async function GET(req: NextRequest) {
       )
     `;
 
-    // Создание триггера для обновления поля updated_at
+    // Создание триггера для таблицы subscriptions
     await sql`
       CREATE TRIGGER update_subscriptions_updated_at
       BEFORE UPDATE ON subscriptions
@@ -66,6 +70,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Database setup completed successfully.' });
   } catch (error) {
     console.error('Error setting up database:', error);
-    return NextResponse.json({ error: 'Failed to set up the database.' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to set up the database.', 
+      details: error.message 
+    }, { status: 500 });
   }
 }
