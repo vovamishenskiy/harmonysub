@@ -20,7 +20,7 @@ const Subscriptions: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/getSubscriptions')
+    fetch('/api/subscriptions')
       .then((res) => res.json())
       .then((data) => {
         setSubscriptions(data);
@@ -45,9 +45,13 @@ const Subscriptions: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {subscriptions.map((subscription, index) => (
-              <Subscription key={index} subscription={subscription} />
-            ))}
+            {subscriptions.length > 0 ? (
+              subscriptions.map((subscription, index) => (
+                <Subscription key={index} subscription={subscription} />
+              ))
+            ) : (
+              <p>Подписок нет</p>
+            )}
           </div>
         )}
       </main>

@@ -4,9 +4,9 @@ import { UserPlusIcon, ArrowRightEndOnRectangleIcon } from "@heroicons/react/16/
 
 const LandingSidebar: React.FC = () => {
     return (
-        <aside className="flex flex-col h-100vh-24px w-1/6 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
+        <aside className="flex flex-col h-100vh-24px min-w-64 max-w-64 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
             <nav className="flex-grow">
-                <Link href='/'><h4 className="text-xl text-emerald-600 hover:text-emerald-500 transition ease-in-out mb-5">harmonysub</h4></Link>
+                <Link href='/'><h4 className="text-xl text-center text-emerald-600 hover:text-emerald-500 transition ease-in-out mb-5">harmonysub</h4></Link>
                 <ul>
                     <li className="mb-6">
                         <Link href='/login'>

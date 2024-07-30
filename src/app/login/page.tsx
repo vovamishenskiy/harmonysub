@@ -5,7 +5,10 @@ const Login = () => {
     return (
         <div className="flex flex-row">
             <main className="w-full flex flex-col">
-                <LandingSidebar />
+                <div className="flex flex-row">
+                    <LandingSidebar />
+                    <LoginForm />
+                </div>
             </main>
         </div>
     );
