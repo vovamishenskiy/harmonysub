@@ -1,8 +1,7 @@
-// pages/api/setupDatabase.ts
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest) {
   try {
     // Создание таблицы users
     await sql`
@@ -16,14 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         country VARCHAR(100),
         telegram_username VARCHAR(100),
         telegram_chat_id VARCHAR(100),
-        role VARCHAR(50) DEFAULT 'user', -- роль пользователя (user/admin)
-        created_at TIMESTAMP DEFAULT NOW(), -- дата создания записи
-        updated_at TIMESTAMP DEFAULT NOW(), -- дата последнего обновления записи
-        CONSTRAINT username_email_unique UNIQUE (username, email) -- уникальность username и email
+        role VARCHAR(50) DEFAULT 'user',
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW(),
+        CONSTRAINT username_email_unique UNIQUE (username, email)
       )
     `;
 
-    // Создание триггера для обновления поля updated_at при изменении записи
+    // Создание триггера для обновления поля updated_at
     await sql`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
@@ -50,13 +49,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         price NUMERIC(10, 2) NOT NULL,
         renewal_type VARCHAR(50) NOT NULL,
         paid_from VARCHAR(4) NOT NULL,
-        status VARCHAR(50) DEFAULT 'active', -- статус подписки (active/inactive)
+        status VARCHAR(50) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
       )
     `;
 
-    // Создание триггера для обновления поля updated_at при изменении записи в subscriptions
+    // Создание триггера для обновления поля updated_at
     await sql`
       CREATE TRIGGER update_subscriptions_updated_at
       BEFORE UPDATE ON subscriptions
@@ -64,9 +63,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       EXECUTE FUNCTION update_updated_at_column();
     `;
 
-    res.status(200).json({ message: 'Database setup completed successfully.' });
+    return NextResponse.json({ message: 'Database setup completed successfully.' });
   } catch (error) {
     console.error('Error setting up database:', error);
-    res.status(500).json({ error: 'Failed to set up the database.' });
+    return NextResponse.json({ error: 'Failed to set up the database.' }, { status: 500 });
   }
 }
