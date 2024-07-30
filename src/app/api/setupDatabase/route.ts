@@ -23,6 +23,9 @@ export async function GET(req: NextRequest) {
       )
     `;
 
+    // Удаление существующего триггера, если он есть
+    await sql`DROP TRIGGER IF EXISTS update_users_updated_at ON users;`;
+
     // Создание функции обновления поля updated_at
     await sql`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -59,6 +62,9 @@ export async function GET(req: NextRequest) {
       )
     `;
 
+    // Удаление существующего триггера, если он есть
+    await sql`DROP TRIGGER IF EXISTS update_subscriptions_updated_at ON subscriptions;`;
+
     // Создание триггера для таблицы subscriptions
     await sql`
       CREATE TRIGGER update_subscriptions_updated_at
@@ -70,7 +76,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Database setup completed successfully.' });
   } catch (error) {
     console.error('Error setting up database:', error);
-    const errorMessage = (error instanceof Error) ? error.message : 'Unknown error.';
+
+    const errorMessage = (error instanceof Error) ? error.message : 'Unknown error';
     return NextResponse.json({ 
       error: 'Failed to set up the database.', 
       details: errorMessage 
