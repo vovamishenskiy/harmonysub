@@ -70,9 +70,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Database setup completed successfully.' });
   } catch (error) {
     console.error('Error setting up database:', error);
+    const errorMessage = (error instanceof Error) ? error.message : 'Unknown error.';
     return NextResponse.json({ 
       error: 'Failed to set up the database.', 
-      details: error.message 
+      details: errorMessage 
     }, { status: 500 });
   }
 }
