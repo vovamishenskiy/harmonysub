@@ -112,7 +112,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     value={formData.name}
                                     onChange={handleChange}
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.name ? 'border-red-500' : ''}`}
-                                    aria-invali={!!errors.name}
+                                    aria-invalid={!!errors.name}
                                     aria-describedby='name-error'
                                 />
                                 {errors.name && <p id='name-error' className='text-red-500'>{errors.name}</p>}
@@ -126,7 +126,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     value={formData.surname}
                                     onChange={handleChange}
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.surname ? 'border-red-500' : ''}`}
-                                    aria-invali={!!errors.surname}
+                                    aria-invalid={!!errors.surname}
                                     aria-describedby='surname-error'
                                 />
                                 {errors.name && <p id='surname-error' className='text-red-500'>{errors.surname}</p>}
@@ -243,7 +243,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     <option value="IM">Остров Мэн</option>
                                     <option value="IL">Израиль</option>
                                     <option value="IT">Италия</option>
-                                    <option value="CI">Кот-д'Ивуар</option>
+                                    <option value="CI">Кот-д&apos;Ивуар</option>
                                     <option value="JM">Ямайка</option>
                                     <option value="JP">Япония</option>
                                     <option value="JE">Джерси</option>
@@ -390,7 +390,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     value={formData.username}
                                     onChange={handleChange}
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.username ? 'border-red-500' : ''}`}
-                                    aria-invali={!!errors.username}
+                                    aria-invalid={!!errors.username}
                                     aria-describedby='username-error'
                                 />
                                 {errors.name && <p id='username-error' className='text-red-500'>{errors.username}</p>}
@@ -404,7 +404,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     value={formData.email}
                                     onChange={handleChange}
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.email ? 'border-red-500' : ''}`}
-                                    aria-invali={!!errors.email}
+                                    aria-invalid={!!errors.email}
                                     aria-describedby='email-error'
                                 />
                                 {errors.name && <p id='email-error' className='text-red-500'>{errors.email}</p>}
@@ -418,7 +418,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     value={formData.password}
                                     onChange={handleChange}
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.password ? 'border-red-500' : ''}`}
-                                    aria-invali={!!errors.password}
+                                    aria-invalid={!!errors.password}
                                     aria-describedby='password-error'
                                 />
                                 {errors.name && <p id='password-error' className='text-red-500'>{errors.password}</p>}
@@ -432,7 +432,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 ${errors.confirmPassword ? 'border-red-500' : ''}`}
-                                    aria-invali={!!errors.confirmPassword}
+                                    aria-invalid={!!errors.confirmPassword}
                                     aria-describedby='confirmPassword-error'
                                 />
                                 {errors.name && <p id='confirmPassword-error' className='text-red-500'>{errors.confirmPassword}</p>}
