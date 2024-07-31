@@ -28,18 +28,16 @@ export async function POST(req: NextRequest) {
     try {
         logWebhookInfo();
 
-        const cookies = req.headers.get('cookie');
-        const parsedCookies = parse(cookies || '');
-        const userId = parsedCookies.userId;
+        const body = await req.json();
+        const message: Message = body.message;
+
+        const userId = req.cookies.get('userId')?.value;
 
         console.log('user id: ', userId)
 
         if (!userId) {
             return NextResponse.json({ error: 'Unauthorized: No userId in cookies' }, { status: 401 });
         }
-
-        const body = await req.json();
-        const message: Message = body.message;
 
         if (message && message.text) {
             const chatId = message.chat.id;
