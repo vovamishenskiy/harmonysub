@@ -1,5 +1,5 @@
 import Sidebar from "@/components/Sidebar";
-import ConnectTelegramButton from '../../../.history/src/components/ConnectTelegramButton_20240731112230';
+import ConnectTelegramButton from '@/components/ConnectTelegramButton';
 
 const Settings = () => {
     return (
