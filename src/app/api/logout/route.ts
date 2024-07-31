@@ -11,20 +11,12 @@ export async function POST(req: NextRequest) {
             path: '/'
         });
 
-        const userCookie = serialize('userId', '', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: -1,
-            path: '/'
-        });
-
         const response = NextResponse.json({
             message: 'Выход выполнен успешно',
         }, { status: 200 });
 
         response.headers.append('Set-Cookie', cookie);
-        response.headers.append('Set-Cookie', userCookie);
+        response.headers.delete('Authorization');
 
         return response;
     } catch (error) {

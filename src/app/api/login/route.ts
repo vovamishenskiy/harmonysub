@@ -41,14 +41,6 @@ export async function POST(req: NextRequest) {
       path: '/'
     });
 
-    const userIdCookie = serialize('userId', String(user.user_id), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24,
-      path: '/'
-    })
-
     const response = NextResponse.json({
       message: 'Login successful',
       avatar_url: user.avatar_url,
@@ -56,7 +48,7 @@ export async function POST(req: NextRequest) {
     }, { status: 200 });
 
     response.headers.append('Set-Cookie', tokenCookie);
-    response.headers.append('Set-Cookie', userIdCookie);
+    response.headers.set('Authorization', user.user_id);
 
     return response;
   } catch (error) {
