@@ -23,8 +23,7 @@ export async function POST(req: NextRequest) {
             try {
                 await sql`
                     INSERT INTO users (telegram_chat_id, telegram_username)
-                    VALUES (${chatId}, ${username})
-                    ON CONFLICT (telegram_chat_id) DO NOTHING;
+                    VALUES (${chatId}, ${username});
                 `;
 
                 await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
