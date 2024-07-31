@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         const parsedCookies = parse(cookies || '');
         const userId = parsedCookies.userId;
 
-        console.log(userId)
+        console.log('user id: ', userId)
 
         if (!userId) {
             return NextResponse.json({ error: 'Unauthorized: No userId in cookies' }, { status: 401 });
