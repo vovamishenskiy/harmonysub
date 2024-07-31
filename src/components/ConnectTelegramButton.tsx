@@ -26,7 +26,7 @@ const ConnectTelegramButton = () => {
 
     const handleConnect = () => {
         const botUsername = 'harmonysub_bot';
-        window.location.href = `https://t.me/${botUsername}?start`;
+        window.open(`https://t.me/${botUsername}?start`, '_blank');
     };
 
     const handleDisconnect = () => {
