@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const message: Message = body.message;
 
-        console.log('Received message:', message);
+        await logWebhookInfo();
 
         if (message && message.text && message.text.startsWith('/start')) {
             const chatId = message.chat.id;
