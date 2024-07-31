@@ -7,6 +7,7 @@ interface Message {
     chat: {
         id: number;
         username?: string;
+        first_name?: string;
     };
     text?: string;
 }
@@ -15,11 +16,11 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const message: Message = body.message;
-        console.log('received body: ', body.message, body.message.text)
 
         if (message && message.text && message.text.startsWith('/start')) {
             const chatId = message.chat.id;
             const username = message.chat.username || 'unknown';
+            const firstName = message.chat.first_name;
 
             try {
                 await sql`
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: chatId,
-                        text: `Здравствуйте, ${username}! Вы успешно подключили уведомления от приложения Harmonysub`,
+                        text: `Здравствуйте, ${firstName}! Вы успешно подключили уведомления от приложения Harmonysub`,
                     }),
                 });
 
