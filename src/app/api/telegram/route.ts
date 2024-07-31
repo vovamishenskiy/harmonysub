@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { sql } from "@vercel/postgres";
+import { NextRequest, NextResponse } from 'next/server';
+import { sql } from '@vercel/postgres';
+
 const telegram_bot_token = process.env.TELEGRAM_BOT_TOKEN;
 
 interface Message {
@@ -21,6 +22,23 @@ export async function POST(req: NextRequest) {
             const chatId = message.chat.id;
             const username = message.chat.username || 'unknown';
             const firstName = message.chat.first_name;
+
+            const existingUser = await sql`
+                SELECT * FROM users WHERE telegram_chat_id = ${chatId}
+            `;
+
+            if (existingUser.rows.length > 0) {
+                await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: `Вы уже подключили уведомления от приложения Harmonysub!`,
+                    }),
+                });
+
+                return NextResponse.json({ message: 'Already connected' });
+            }
 
             try {
                 await sql`
