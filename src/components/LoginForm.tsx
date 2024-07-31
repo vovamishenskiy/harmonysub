@@ -55,9 +55,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
                 }, {});
                 setErrors(zodErrors);
             } else if (axios.isAxiosError(err) && err.response?.status === 401) {
-                setErrors({ general: 'Произошла ошибка. Попробуйте позже.' });
-            } else {
                 setErrors({ general: 'Неверный email или пароль' });
+            } else {
+                setErrors({ general: 'Произошла ошибка. Попробуйте позже.' });
             }
         }
     }
