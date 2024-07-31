@@ -31,9 +31,11 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const message: Message = body.message;
 
-        const userId = req.cookies.get('userId')?.value;
+        const cookies = req.headers.get('Cookie') || '';
+        const parsedCookies = parse(cookies);
+        const userId = parsedCookies['userId'];
 
-        console.log(req.cookies);
+        console.log(parsedCookies);
         console.log('user id: ', userId);
 
         if (!userId) {
