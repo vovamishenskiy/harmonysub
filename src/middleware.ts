@@ -7,7 +7,6 @@ export async function middleware(req: NextRequest) {
     const token = req.cookies.get('token')?.value;
 
     if (!token) {
-        console.log('Token not found, redirecting to login');
         return NextResponse.redirect(new URL('/', req.url));
     }
 
@@ -22,5 +21,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: '/subscriptions/:path*',
+    matcher: ['/subscriptions/:path*', '/user/:path*', '/settings/:path*'],
 }
