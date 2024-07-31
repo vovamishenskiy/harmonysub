@@ -50,6 +50,4 @@ export async function POST(req: NextRequest) {
     }
 };
 
-export const config = {
-    runtime: 'nodejs',
-};
+export const runtime = 'nodejs';
