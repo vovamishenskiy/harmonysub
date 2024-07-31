@@ -13,19 +13,28 @@ interface Message {
     text?: string;
 }
 
+async function logWebhookInfo() {
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${telegram_bot_token}/getWebhookInfo`);
+        const data = await response.json()
+        console.log('[ DEBUG ] TELEGRAM BOT WEBHOOK INFO: ', data.result);
+    } catch (error) {
+        console.error('Ошибка при получении информации о вебхуке: ', error);
+    }
+}
+
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const message: Message = body.message;
 
-        console.log('Received message:', message); // Логирование для диагностики
+        console.log('Received message:', message);
 
         if (message && message.text && message.text.startsWith('/start')) {
             const chatId = message.chat.id;
             const username = message.chat.username || 'unknown';
             const firstName = message.chat.first_name || 'User';
 
-            // Проверка на существующего пользователя
             const existingUser = await sql`
                 SELECT * FROM users WHERE telegram_chat_id = ${chatId}
             `;
@@ -43,7 +52,6 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ message: 'Already connected' });
             }
 
-            // Вставка нового пользователя
             await sql`
                 INSERT INTO users (telegram_chat_id, telegram_username)
                 VALUES (${chatId}, ${username})
@@ -64,7 +72,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json({ message: 'OK' });
         } else {
-            console.error('Invalid message format:', message); // Логирование для диагностики
+            console.error('Invalid message format:', message);
             return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
         }
     } catch (error) {
