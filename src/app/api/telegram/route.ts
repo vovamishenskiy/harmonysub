@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
 
             try {
                 await sql`
-                    INSERT INTO users (telegram_chat_id, telegram_username, name)
-                    VALUES (${chatId}, ${username}, COALESCE((SELECT name FROM users WHERE telegram_chat_id = ${chatId}), name))
+                    INSERT INTO users (telegram_chat_id, telegram_username)
+                    VALUES (${chatId}, ${username})
                     ON CONFLICT (telegram_chat_id) DO UPDATE SET telegram_username = EXCLUDED.telegram_username;
                 `;
 
