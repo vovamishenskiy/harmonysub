@@ -14,8 +14,8 @@ interface Message {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const message: Message = body.message.text;
-        console.log('received body: ', body)
+        const message: Message = body.message;
+        console.log('received body: ', body.message, body.message.text)
 
         if (message && message.text && message.text.startsWith('/start')) {
             const chatId = message.chat.id;
