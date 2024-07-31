@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       { expiresIn: '24h' }
     );
 
-    const cookie = serialize('token', token, {
+    const tokenCookie = serialize('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -41,8 +41,23 @@ export async function POST(req: NextRequest) {
       path: '/'
     });
 
-    const response = NextResponse.json({ message: 'Login successful', avatar_url: user.avatar_url, username: user.username }, { status: 200, headers: { 'Set-Cookie': cookie } });
-    response.headers.set('Set-Cookie', cookie);
+    const userIdCookie = serialize('userId', String(user.user_id), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24,
+      path: '/'
+    })
+
+    const response = NextResponse.json({
+      message: 'Login successful',
+      avatar_url: user.avatar_url,
+      username: user.username
+    }, { status: 200 });
+
+    response.headers.append('Set-Cookie', tokenCookie);
+    response.headers.append('Set-Cookie', userIdCookie);
+
     return response;
   } catch (error) {
     console.error(error);
