@@ -1,9 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
     const token = req.cookies.get('token')?.value;
 
     if (!token) {
@@ -12,8 +12,8 @@ export function middleware(req: NextRequest) {
     }
 
     try {
-        jwt.verify(token, JWT_SECRET as string);
-        console.log('Token verified, proceeding to requested route');
+        const secret = new TextEncoder().encode(JWT_SECRET);
+        await jwtVerify(token, secret);
         return NextResponse.next();
     } catch (error) {
         console.error('Invalid token:', error);
@@ -22,5 +22,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: '/subscriptions',
+    matcher: '/subscriptions/:path*',
 }
