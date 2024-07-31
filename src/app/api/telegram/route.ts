@@ -26,6 +26,8 @@ async function logWebhookInfo() {
 
 export async function POST(req: NextRequest) {
     try {
+        logWebhookInfo();
+
         const cookies = req.headers.get('cookie');
         const parsedCookies = parse(cookies || '');
         const userId = parsedCookies.userId;
@@ -42,7 +44,7 @@ export async function POST(req: NextRequest) {
 
             if (message.text.startsWith('/start')) {
                 const username = message.chat.username || 'unknown';
-                const firstName = message.chat.first_name || 'User';
+                const firstName = message.chat.first_name || 'Пользователь';
 
                 const existingUser = await sql`
                     SELECT * FROM users WHERE telegram_chat_id = ${chatId}
@@ -62,13 +64,13 @@ export async function POST(req: NextRequest) {
                 }
 
                 await sql`
-                    INSERT INTO users (user_id, telegram_chat_id, telegram_username)
-                    VALUES (${userId}, ${chatId}, ${username})
+                    INSERT INTO users (telegram_chat_id, telegram_username)
+                    VALUES (${chatId}, ${username})
                     ON CONFLICT (user_id) 
                     DO UPDATE SET 
                         telegram_chat_id = EXCLUDED.telegram_chat_id,
                         telegram_username = EXCLUDED.telegram_username
-                    WHERE users.user_id = ${userId}
+                    WHERE user_id = ${userId}
                 `;
 
                 await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
