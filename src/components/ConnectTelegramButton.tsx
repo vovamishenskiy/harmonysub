@@ -10,7 +10,7 @@ const ConnectTelegramButton = () => {
         fetch('/api/checkTelegramConnection')
             .then((res) => res.json())
             .then((data) => {
-                setIsConnected(data.connected);
+                setIsConnected(data.telegramConnected);
                 setLoading(false);
             })
             .catch((err) => {
@@ -25,23 +25,25 @@ const ConnectTelegramButton = () => {
     }
 
     const handleDisconnect = () => {
-        fetch('/api/disconnectTelegram', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if(data.message === 'Подключение к телеграм боту удалено') {
-                    setIsConnected(false);
-                } else {
-                    console.error('Ошибка при отключении телеграм бота: ', data.error);
-                }
-            })
-            .catch((err) => {
-                console.error('Ошибка при отключении телеграм бота: ', err);
-            })
+        const botUsername = 'harmonysub_bot';
+        window.location.href = `https://t.me/${botUsername}?disconnect`;
+        // fetch('/api/disconnectTelegram', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         if(data.message === 'Подключение к телеграм боту удалено') {
+        //             setIsConnected(false);
+        //         } else {
+        //             console.error('Ошибка при отключении телеграм бота: ', data.error);
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.error('Ошибка при отключении телеграм бота: ', err);
+        //     })
     }
 
     if (loading) {
