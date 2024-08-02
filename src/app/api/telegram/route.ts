@@ -32,14 +32,46 @@ export async function POST(req: NextRequest) {
 
         if (message && message.text && message.text.startsWith('/start')) {
             const chatId = message.chat.id;
-            const username = message.chat.username || 'unknown';
             const firstName = message.chat.first_name || 'User';
 
+            await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: `Здравстуйте, ${firstName}! Чтобы подключить уведомления от приложения Harmonysub пришлите имя пользователя, которые Вы указывали при регистрации в приложении`,
+                }),
+            });
+        } else if (message && message.text) {
+            const chatId = message.chat.id;
+            const username = message.text;
+            const telegram_username = message.chat.username;
+
             const existingUser = await sql`
-                SELECT * FROM users WHERE telegram_chat_id = ${chatId}
+                SELECT * FROM users WHERE username = ${username}
             `;
 
-            if (existingUser.rows.length > 0) {
+            if (existingUser.rows.length == 0) {
+                await sql`
+                    INSERT INTO users (telegram_chat_id, telegram_username)
+                    VALUES (${chatId}, ${telegram_username})
+                    ON CONFLICT (telegram_chat_id)
+                    DO UPDATE SET
+                        telegram_username = EXCLUDED.telegram_username
+                    WHERE users.username = ${username}
+                `;
+
+                await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: `Вы успешно подключили уведомления от приложения Harmonysub!`,
+                    }),
+                });
+
+                return NextResponse.json({ message: 'Already connected' });
+            } else if (existingUser.rows.length > 0) {
                 await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -51,26 +83,6 @@ export async function POST(req: NextRequest) {
 
                 return NextResponse.json({ message: 'Already connected' });
             }
-
-            await sql`
-                INSERT INTO users (telegram_chat_id, telegram_username)
-                VALUES (${chatId}, ${username})
-                ON CONFLICT (telegram_chat_id) 
-                DO UPDATE SET 
-                    telegram_username = EXCLUDED.telegram_username
-                WHERE users.telegram_username IS DISTINCT FROM EXCLUDED.telegram_username;
-            `;
-
-            await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `Здравствуйте, ${firstName}! Вы успешно подключили уведомления от приложения Harmonysub`,
-                }),
-            });
-
-            return NextResponse.json({ message: 'OK' });
         } else {
             console.error('Invalid message format:', message);
             return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
