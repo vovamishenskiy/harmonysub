@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
         `;
 
         const telegramConnected = result.rows.length > 0 && result.rows[0].telegram_chat_id != null;
+        console.log(telegramConnected)
         return NextResponse.json({ telegramConnected });
     } catch (error) {
         console.error('Ошибка проверки подключения Телеграм бота: ', error);
