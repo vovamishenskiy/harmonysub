@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
                 SELECT * FROM users WHERE username = ${username}
             `;
 
-            if (existingUser.rows.length == 0) {
+            if (existingUser.rows.length == null) {
                 await sql`
                     INSERT INTO users (telegram_chat_id, telegram_username)
                     VALUES (${chatId}, ${telegram_username})
