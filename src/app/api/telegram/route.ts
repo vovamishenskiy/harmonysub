@@ -44,10 +44,35 @@ export async function POST(req: NextRequest) {
                         text: `Здравстуйте, ${firstName}! Чтобы подключить уведомления от приложения Harmonysub пришлите имя пользователя, которые Вы указывали при регистрации в приложении`,
                     }),
                 })
-                    .then((res) => console.log(res.json()));
                 limit = 0;
 
                 return NextResponse.json({ message: 'Пользователь отправил старт боту' });
+            } else if (limit == 0) {
+                limit = 1;
+                return NextResponse.json({ message: 'Бот уже ответил' });
+            }
+        } else if (message && message.text && message.text.startsWith('/disconnect')) {
+            const chatId = message.chat.id;
+            const firstName = message.chat.first_name;
+
+            await sql`
+                UPDATE users
+                SET telegram_chat_id = NULL, telegram_username = NULL
+                WHERE telegram_chat_id = ${chatId}
+            `;
+
+            if (limit == 1) {
+                await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: `Здравстуйте, ${firstName}! Вы отключили уведомления от приложения Harmonysub`,
+                    }),
+                })
+                limit = 0;
+
+                return NextResponse.json({ message: 'Пользователь отключил уведомления от приложения' });
             } else if (limit == 0) {
                 limit = 1;
                 return NextResponse.json({ message: 'Бот уже ответил' });
@@ -91,11 +116,11 @@ export async function POST(req: NextRequest) {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: chatId,
-                            text: `Вы уже подключили уведомления от приложения Harmonysub!`,
+                            text: `Пользователя с таким именем пользователя не существует или Вы уже подключили уведомления от приложения Harmonysub!`,
                         }),
                     });
 
-                    return NextResponse.json({ message: 'Пользователь уже подключил телеграм к приложению' });
+                    return NextResponse.json({ message: 'Нет такого пользователя или пользователь уже подключил телеграм к приложению' });
                 } else if (limit == 0) {
                     limit = 1;
                     return NextResponse.json({ message: 'Бот уже ответил' });
