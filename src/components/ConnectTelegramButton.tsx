@@ -1,5 +1,6 @@
 'use client';
 
+import { revalidatePath } from "next/cache";
 import React, { useState, useEffect } from "react";
 
 const ConnectTelegramButton = () => {
@@ -21,29 +22,14 @@ const ConnectTelegramButton = () => {
 
     const handleConnect = () => {
         const botUsername = 'harmonysub_bot';
-        window.location.href = `https://t.me/${botUsername}?start`;
+        window.open(`https://t.me/${botUsername}?start`, '_target');
+        revalidatePath('/settings')
     }
 
     const handleDisconnect = () => {
         const botUsername = 'harmonysub_bot';
-        window.location.href = `https://t.me/${botUsername}?disconnect`;
-        // fetch('/api/disconnectTelegram', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         if(data.message === 'Подключение к телеграм боту удалено') {
-        //             setIsConnected(false);
-        //         } else {
-        //             console.error('Ошибка при отключении телеграм бота: ', data.error);
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.error('Ошибка при отключении телеграм бота: ', err);
-        //     })
+        window.open(`https://t.me/${botUsername}?disconnect`, '_target');
+        revalidatePath('/settings')
     }
 
     if (loading) {
