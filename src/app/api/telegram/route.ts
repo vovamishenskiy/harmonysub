@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: chatId,
-                        text: `Здравстуйте, ${firstName}! Вы отключили уведомления от приложения Harmonysub`,
+                        text: 'Вы успешно отключили уведомления от приложения Harmonysub, если захотите снова подключить их используйте команду /start',
                     }),
                 })
                 limit = 0;
