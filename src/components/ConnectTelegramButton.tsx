@@ -40,7 +40,7 @@ const ConnectTelegramButton = () => {
                 <div className="flex flex-col">
                     <div className="flex flex-row gap-2">
                         <XCircleIcon className="w-6 h-6 mb-3" />
-                        <p>Уведомления от телеграм бота подключены</p>
+                        <p>Уведомления от телеграм бота отключены</p>
                     </div>
                     <button onClick={handleConnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Подключить уведомления
