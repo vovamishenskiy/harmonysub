@@ -12,6 +12,7 @@ const ConnectTelegramButton = () => {
             .then((res) => res.json())
             .then((data) => {
                 setIsConnected(data.telegramConnected);
+                console.log(data.telegramConnected)
                 setLoading(false);
             })
             .catch((err) => {
