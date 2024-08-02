@@ -42,7 +42,7 @@ const ConnectTelegramButton = () => {
                         <CheckCircleIcon className="w-6 h-6 mb-3" />
                         <p>Уведомления от телеграм бота подключены</p>
                     </div>
-                    <button onClick={handleConnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
+                    <button onClick={handleDisconnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Отключить уведомления
                     </button>
                 </div>
@@ -52,7 +52,7 @@ const ConnectTelegramButton = () => {
                         <XCircleIcon className="w-6 h-6 mb-3" />
                         <p>Уведомления от телеграм бота отключены</p>
                     </div>
-                    <button onClick={handleDisconnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
+                    <button onClick={handleConnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Подключить уведомления
                     </button>
                 </div>

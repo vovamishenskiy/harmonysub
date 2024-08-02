@@ -136,4 +136,36 @@ export async function POST(req: NextRequest) {
     }
 };
 
+export async function GET(req: NextRequest) {
+    try {
+        const currentDate = new Date().toISOString().split('T')[0];
+
+        const expiringSubscriptions = await sql`
+            SELECT username, telegram_chat_id, telegram_username, expiry_date, title
+            FROM users
+            WHERE expiry_date BETWEEN ${currentDate} AND (DATE(${currentDate}) + INTERVAL '3 days)
+        `;
+
+        for (const user of expiringSubscriptions.rows) {
+            const { telegram_chat_id, telegram_username, expiry_date, title } = user;
+
+            if (telegram_chat_id) {
+                await fetch(`https://api.telegram.org/bot${telegram_bot_token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: telegram_chat_id,
+                        text: `Здравствуйте, Ваша подписка ${title} истекает через 3 дня. Не забудьте обновить данные в приложении Harmonysub`
+                    }),
+                });
+            }
+        }
+
+        return NextResponse.json({ message: 'Уведомления отправлены' });
+    } catch (error) {
+        console.error('Ошибка при проверке подписок: ', error);
+        return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 });
+    }
+}
+
 export const runtime = 'nodejs';
