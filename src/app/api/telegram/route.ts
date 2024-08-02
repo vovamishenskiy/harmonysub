@@ -63,11 +63,8 @@ export async function POST(req: NextRequest) {
 
             if (existingUser.rows.length == 0) {
                 await sql`
-                    INSERT INTO users (telegram_chat_id, telegram_username)
-                    VALUES (${chatId}, ${telegram_username})
-                    ON CONFLICT (telegram_chat_id)
-                    DO UPDATE SET
-                        telegram_username = EXCLUDED.telegram_username
+                    UPDATE users 
+                    SET telegram_chat_id = ${chatId}, telegram_username = ${telegram_username}
                     WHERE users.username = ${username}
                 `;
 
