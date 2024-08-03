@@ -10,7 +10,7 @@ interface LoginFormProps {
 
 const LoginSchema = z.object({
     email: z.string().email({ message: 'Введите адрес электронной почты' }),
-    password: z.string().min(6, { message: 'Введите пароль длиной минимум 6 символов' })
+    password: z.string().min(6, { message: 'Пароль должен содержать минимум 6 символов' })
 });
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {

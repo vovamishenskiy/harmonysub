@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { UserCircleIcon, CogIcon, ArrowLeftEndOnRectangleIcon, QueueListIcon } from "@heroicons/react/16/solid";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface SidebarProps {
     onLogout?: () => void;
@@ -13,13 +13,16 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     const [userAvatar, setUserAvatar] = useState<string | null>(null);
     const [username, setUsername] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const currentPath = usePathname();
 
     useEffect(() => {
         const avatarUrl = localStorage.getItem('avatar_url');
         const username = localStorage.getItem('username');
         setUserAvatar(avatarUrl);
         setUsername(username);
+        setLoading(false);
     }, []);
 
     const handleLogout = async () => {
@@ -44,13 +47,17 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
         }
     };
 
+    const isActiveLink = (path: string) => {
+        return `flex items-center p-2 rounded-md transition ease-in-out ${currentPath === path ? 'bg-emerald-700' : 'hover:bg-emerald-700'}`
+    }
+
     return (
         <aside className="flex flex-col h-100vh-24px min-w-64 max-w-64 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
             <nav className="flex-grow">
                 <ul>
                     <li className="mb-6">
                         <Link href='/subscriptions'>
-                            <span className="flex items-center p-2 hover:bg-emerald-700 rounded-md transition ease-in-out">
+                            <span className={isActiveLink('/subscriptions')}>
                                 <QueueListIcon className="h-6 w-6 mr-3" />
                                 Подписки
                             </span>
@@ -58,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                     </li>
                     <li className="mb-6">
                         <Link href='/user'>
-                            <span className="flex items-center p-2 hover:bg-emerald-700 rounded-md transition ease-in-out">
+                            <span className={isActiveLink('/user')}>
                                 <UserCircleIcon className="h-6 w-6 mr-3" />
                                 Пользователь
                             </span>
@@ -66,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                     </li>
                     <li className="mb-6">
                         <Link href='/settings'>
-                            <span className="flex items-center p-2 hover:bg-emerald-700 rounded-md transition ease-in-out">
+                            <span className={isActiveLink('/settings')}>
                                 <CogIcon className="h-6 w-6 mr-3" />
                                 Настройки
                             </span>
@@ -81,7 +88,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                     ) : (
                         <UserCircleIcon className="h-6 w-6 mr-3" />
                     )}
-                    {username ? (
+                    {loading ? (
+                        <div className="h-6 w-full bg-emerald-700 rounded-md animate-pulse" />
+                    ) : username ? (
                         <p>{username}</p>
                     ) : (
                         <p>Пользователь</p>

@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/16/solid";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+
+const Skeleton: React.FC = () => (
+    <div className='animate-pulse bg-gray-300 h-20 rounded-xl w-1/4' />
+);
 
 const ConnectTelegramButton = () => {
     const [isConnected, setIsConnected] = useState(false);
@@ -31,28 +35,36 @@ const ConnectTelegramButton = () => {
     }
 
     if (loading) {
-        return (<p>Загрузка...</p>);
+        return (
+            <div className="flex flex-col">
+                <p className="text-xl mb-3">Настройки уведомлений</p>
+                <div className="pl-2">
+                    <Skeleton />
+                </div>
+            </div>
+        );
     }
 
     return (
         <div className="flex flex-col">
+            <p className="text-xl mb-3">Настройки уведомлений</p>
             {isConnected ? (
-                <div className="flex flex-col">
+                <div className="flex flex-col pl-2">
                     <div className="flex flex-row gap-2">
                         <CheckCircleIcon className="w-6 h-6 mb-3" />
                         <p>Уведомления от телеграм бота подключены</p>
                     </div>
-                    <button onClick={handleDisconnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
+                    <button onClick={handleDisconnect} className="btn btn-primary rounded-xl w-80 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Отключить уведомления
                     </button>
                 </div>
             ) : (
                 <div className="flex flex-col">
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row gap-2 pl-2">
                         <XCircleIcon className="w-6 h-6 mb-3" />
                         <p>Уведомления от телеграм бота отключены</p>
                     </div>
-                    <button onClick={handleConnect} className="btn btn-primary rounded-xl w-2/3 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
+                    <button onClick={handleConnect} className="btn btn-primary rounded-xl w-80 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Подключить уведомления
                     </button>
                 </div>

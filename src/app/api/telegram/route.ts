@@ -155,7 +155,7 @@ export async function GET(req: NextRequest) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: telegram_chat_id,
-                        text: `Здравствуйте, Ваша подписка ${title} истекает через 3 дня. Не забудьте обновить данные в приложении Harmonysub`
+                        text: `Здравствуйте, Ваша подписка ${title} истекает ${expiry_date} (через 3 дня). Не забудьте обновить данные в приложении Harmonysub!`
                     }),
                 });
             }

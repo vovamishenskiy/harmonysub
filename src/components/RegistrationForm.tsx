@@ -15,7 +15,7 @@ const RegistrationSchema = z.object({
     surname: z.string().min(1, { message: "Введите фамилию" }),
     username: z.string().min(1, { message: "Введите имя пользователя на английском языке" }),
     email: z.string().email({ message: 'Введите адрес электронной почты' }),
-    password: z.string().min(6, { message: 'Введите пароль длиной минимум 6 символов' }),
+    password: z.string().min(6, { message: 'Пароль должен содержать минимум 6 символов' }),
     confirmPassword: z.string().min(6, { message: 'Подтвердите пароль' }),
     country: z.string().min(1, { message: 'Выберите страну' }),
 }).refine(data => data.password === data.confirmPassword, {
