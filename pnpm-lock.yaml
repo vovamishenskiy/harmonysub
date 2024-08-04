@@ -11,6 +11,9 @@ importers:
       '@hcaptcha/react-hcaptcha':
         specifier: ^1.10.2
         version: 1.10.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@hcaptcha/types':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@heroicons/react':
         specifier: ^2.1.5
         version: 2.1.5(react@18.3.1)
@@ -134,6 +137,9 @@ packages:
     peerDependencies:
       react: '>= 16.3.0'
       react-dom: '>= 16.3.0'
+
+  '@hcaptcha/types@1.0.4':
+    resolution: {integrity: sha512-4CBrdr9DFC7sYZPRvLol82UVZVne8B2skBGfMDUqPC6q9vzHMwv/cNxXW44EIa6DaFDr+EWNSnKJpHxWr7Q42Q==}
 
   '@heroicons/react@2.1.5':
     resolution: {integrity: sha512-FuzFN+BsHa+7OxbvAERtgBTNeZpUjgM/MIizfVkSCL2/edriN0Hx/DWRCR//aPYwO5QX/YlgLGXk+E3PcfZwjA==}
@@ -1981,6 +1987,8 @@ snapshots:
       '@hcaptcha/loader': 1.2.4
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@hcaptcha/types@1.0.4': {}
 
   '@heroicons/react@2.1.5(react@18.3.1)':
     dependencies:

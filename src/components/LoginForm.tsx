@@ -6,7 +6,7 @@ import axios from 'axios';
 import { z, ZodError } from 'zod';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
-const HCAPTCHA_TOKEN: any = process.env.HCAPTCHA_TOKEN;
+const HCAPTCHA_TOKEN: any = process.env.NEXT_PUBLIC_HCAPTCHA_TOKEN;
 
 interface LoginFormProps {
     onLoginSuccess?: () => void;
