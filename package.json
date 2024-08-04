@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preinstall": "typesync || :"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.10.2",
     "@hcaptcha/types": "^1.0.4",
     "@heroicons/react": "^2.1.5",
+    "@nextui-org/react": "^2.4.6",
     "@types/cookie": "^0.6.0",
     "@types/jsonwebtoken": "^9.0.6",
     "@vercel/blob": "^0.23.4",
@@ -19,6 +21,7 @@
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
+    "framer-motion": "^11.3.21",
     "heroicons": "^2.1.5",
     "jose": "^5.6.3",
     "jsonwebtoken": "^9.0.2",
@@ -26,11 +29,13 @@
     "next": "14.2.5",
     "pnpm": "^9.6.0",
     "react": "^18",
+    "react-datepicker": "^7.3.0",
     "react-dom": "^18",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/eslint": "~9.6.0",
     "@types/md5": "^2.3.5",
     "@types/node": "^20",
     "@types/react": "^18",

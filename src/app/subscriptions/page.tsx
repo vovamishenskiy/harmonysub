@@ -4,15 +4,16 @@ import React, { useEffect, useState } from 'react';
 import Subscription from '@/components/Subscription';
 import SubscriptionSkeleton from '@/components/SubscriptionSkeleton';
 import Sidebar from '@/components/Sidebar';
+import AddSubscriptionButton from '@/components/AddSubscriptionButton';
 
 interface ISubscription {
   title: string;
   price: number;
-  renewalType: string;
-  startDate: string;
-  expiryDate: string;
-  paidFrom: string;
-  status: string;
+  renewal_type: string;
+  start_date: string;
+  expiry_date: string;
+  paid_from: string;
+  status: boolean;
 };
 
 const Subscriptions: React.FC = () => {
@@ -35,7 +36,7 @@ const Subscriptions: React.FC = () => {
   return (
     <div className='flex flex-row'>
       <Sidebar />
-      <main className="flex flex-col mt-3 ml-4">
+      <main className="flex flex-col mt-3 ml-4 w-full">
         <h1 className="text-3xl mb-5">Подписки</h1>
         {loading ? (
           <div className="space-y-4">
@@ -44,7 +45,7 @@ const Subscriptions: React.FC = () => {
             <SubscriptionSkeleton />
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="flex flex-row flex-wrap items-start gap-10 h-auto">
             {subscriptions.length > 0 ? (
               subscriptions.map((subscription, index) => (
                 <Subscription key={index} subscription={subscription} />
@@ -54,6 +55,7 @@ const Subscriptions: React.FC = () => {
             )}
           </div>
         )}
+        <AddSubscriptionButton />
       </main>
     </div>
   );

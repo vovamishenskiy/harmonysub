@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div className='flex flex-row'>
-      <main className="w-full flex flex-col">
+      <main className="w-full flex flex-col relative">
         <div className="flex flex-row text-center">
           <LandingSidebar />
           <div className="flex flex-col gap-3 text center  m-auto">

@@ -9,15 +9,15 @@ export async function GET(req: NextRequest) {
 
     try {
         const user = await sql`
-            SELECT email, country FROM users WHERE username = ${username}
+            SELECT email, country, user_id FROM users WHERE username = ${username}
         `;
 
         if (user.rows.length === 0) {
             return NextResponse.json({ error: 'Пользователь не найден' }, { status: 404 });
         }
 
-        const { email, country } = user.rows[0];
-        return NextResponse.json({ email, country });
+        const { email, country, user_id } = user.rows[0];
+        return NextResponse.json({ email, country, user_id });
     } catch (error) {
         console.error('Ошибка при получении данных пользователя: ', error);
         return NextResponse.json({ error: 'Ошибка при получении данных пользователя' }, { status: 500 });
