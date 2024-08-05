@@ -108,7 +108,7 @@ const AddSubscriptionButton = () => {
                                 <label className="block text-sm font-medium text-gray-700">Дата начала подписки</label>
                                 <DatePicker
                                     selected={startDate}
-                                    onChange={(date: Date) => setStartDate(date)}
+                                    onChange={(date: any) => setStartDate(date)}
                                     className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
                                     dateFormat="dd/MM/yyyy"
                                     required
