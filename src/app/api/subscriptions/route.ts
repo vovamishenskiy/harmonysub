@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get('token')?.value;
 
     if (!token) {
-        NextResponse.redirect(new URL('/', req.url));
         return NextResponse.redirect(new URL('/', req.url));
     }
 

@@ -4,9 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { z, ZodError } from 'zod';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
-
-const HCAPTCHA_TOKEN: any = process.env.NEXT_PUBLIC_HCAPTCHA_TOKEN;
 
 interface LoginFormProps {
     onLoginSuccess?: () => void;
@@ -23,16 +20,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         password: ''
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    const handleCaptcha = (captchaToken: string) => {
-        setCaptchaToken(captchaToken);
-    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,11 +34,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
 
         try {
             schema.parse(formData);
-
-            if (!captchaToken) {
-                setErrors({ general: 'Пройдите проверку капчи' });
-                return;
-            }
 
             const response = await axios.post('/api/login', formData);
 
@@ -81,7 +68,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
             <form onSubmit={handleSubmit} className='flex flex-col items-center w-5/6 h-1/2 m-auto'>
                 <h2 className="text-4xl font-bold mb-6 text-emerald-700">Вход</h2>
 
-                <div className="flex flex-col gap max-w-full w-1/2 mx-auto">
+                <div className="flex flex-col gap max-w-full w-1/3 mx-auto">
                     <div className="mb-4">
                         <input
                             type="email"
@@ -111,9 +98,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
                     </div>
                 </div>
 
-                <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} />
-
-                <button type='submit' disabled={!captchaToken} className='w-1/4 bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
+                <button type='submit' className='w-1/6 bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
                     Войти
                 </button>
                 {errors.general && <p className='text-red-500 pt-2'>{errors.general}</p>}

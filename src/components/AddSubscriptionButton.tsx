@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 // @ts-ignore
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -19,7 +19,7 @@ const AddSubscriptionButton = () => {
     const [paymentCard, setPaymentCard] = useState('')
     const [isStopped, setIsStopped] = useState(false);
 
-    const handleOpen = (e: any) => {
+    const handleOpenClose = (e: any) => {
         e.stopPropagation();
         setOpen(!open);
     }
@@ -89,10 +89,13 @@ const AddSubscriptionButton = () => {
 
     return (
         <>
-            {open && (
-                <div className='w-full h-full opacity-70 bg-gray-800 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={handleOpen}>
-                    <div className="w-1/3 h-auto rounded-xl p-4 bg-white cursor-default" onClick={(e) => e.stopPropagation()}>
-                        <p className="text-lg mb-4">Добавить подписку</p>
+            {open ? (
+                <div className='w-full h-full z-[212] opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={handleOpenClose}>
+                    <div className="w-1/3 h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex flex-row items-baseline justify-between">
+                            <p className="text-lg mb-4">Добавить подписку</p>
+                            <button onClick={handleOpenClose} className="btn"><XMarkIcon className='w-6 h-6'/></button>
+                        </div>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Название подписки</label>
@@ -109,20 +112,23 @@ const AddSubscriptionButton = () => {
                                 <DatePicker
                                     selected={startDate}
                                     onChange={(date: any) => setStartDate(date)}
-                                    className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                    className="block w-[608px] p-2 border rounded-xl bg-transparent h-12 outline-none"
                                     dateFormat="dd/MM/yyyy"
                                     required
                                 />
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Цена</label>
-                                <input
-                                    type="number"
-                                    className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    required
-                                />
+                                <div className="flex flex-row gap-2 items-center">
+                                    <input
+                                        type="text"
+                                        className="block w-[97%] p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                        value={price}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                        required
+                                    />
+                                    ₽
+                                </div>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Тип продления подписки</label>
@@ -144,7 +150,7 @@ const AddSubscriptionButton = () => {
                                 </select>
                             </div>
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Откуда подписка оплачивается (последние 4 цифры карты)</label>
+                                <label className="block text-sm font-medium text-gray-700">Откуда оплачивается подписка (последние 4 цифры карты)</label>
                                 <input
                                     type="text"
                                     className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
@@ -155,14 +161,13 @@ const AddSubscriptionButton = () => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Статус подписки</label>
-                                <div className="flex items-center">
+                                <div className="flex gap-2 items-center">
+                                    <span className="ml-2">Подписка остановлена?</span>
                                     <input
                                         type="checkbox"
                                         checked={isStopped}
                                         onChange={(e) => setIsStopped(e.target.checked)}
                                     />
-                                    <span className="ml-2">Остановлена</span>
                                 </div>
                             </div>
                             <div className="flex justify-end">
@@ -176,17 +181,19 @@ const AddSubscriptionButton = () => {
                         </form>
                     </div>
                 </div>
+            ) : (
+                <button className="
+                    btn btn-primary bg-emerald-800 hover:bg-emerald-700 
+                    absolute bottom-10 right-10 w-14 h-14 flex 
+                    justify-center items-center rounded-full 
+                    transition ease-in-out duration-200 hover:rotate-90
+                "
+                    onClick={handleOpenClose}>
+                    <PlusIcon className='w-8 h-8 text-white' />
+                </button>
             )}
 
-            <button className="
-                btn btn-primary bg-emerald-800 hover:bg-emerald-700 
-                absolute bottom-10 right-10 w-14 h-14 flex 
-                justify-center items-center rounded-full 
-                transition ease-in-out duration-200 hover:rotate-90
-            "
-                onClick={handleOpen}>
-                <PlusIcon className='w-8 h-8 text-white' />
-            </button>
+
         </>
     )
 };

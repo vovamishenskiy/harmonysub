@@ -30,14 +30,14 @@ export async function POST(req: NextRequest) {
     const token = jwt.sign(
       { userId: user.user_id, email: user.email },
       JWT_SECRET,
-      { expiresIn: '24h' }
+      { expiresIn: '6h' }
     );
 
     const cookie = serialize('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 6,
       path: '/'
     });
 

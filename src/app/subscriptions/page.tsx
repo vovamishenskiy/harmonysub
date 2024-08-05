@@ -40,12 +40,12 @@ const Subscriptions: React.FC = () => {
         <h1 className="text-3xl mb-5">Подписки</h1>
         {loading ? (
           <div className="space-y-4">
-            <SubscriptionSkeleton />
-            <SubscriptionSkeleton />
-            <SubscriptionSkeleton />
+            {Array.from({ length: subscriptions.length || 1 }).map((_, index) => (
+              <SubscriptionSkeleton key={index} />
+            ))}
           </div>
         ) : (
-          <div className="flex flex-row flex-wrap items-start gap-10 h-auto">
+          <div className="flex flex-row flex-wrap items-start gap-4 h-auto">
             {subscriptions.length > 0 ? (
               subscriptions.map((subscription, index) => (
                 <Subscription key={index} subscription={subscription} />
