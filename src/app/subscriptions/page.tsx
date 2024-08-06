@@ -7,6 +7,8 @@ import Sidebar from '@/components/Sidebar';
 import AddSubscriptionButton from '@/components/AddSubscriptionButton';
 
 interface ISubscription {
+  subscription_id: number;
+  user_id: number;
   title: string;
   price: number;
   renewal_type: string;
@@ -20,7 +22,7 @@ const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchSubscriptions = () => {
     fetch('/api/subscriptions')
       .then((res) => res.json())
       .then((data) => {
@@ -31,6 +33,10 @@ const Subscriptions: React.FC = () => {
         console.error('Ошибка при получении подписок: ', err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchSubscriptions();
   }, []);
 
   return (
@@ -47,15 +53,19 @@ const Subscriptions: React.FC = () => {
         ) : (
           <div className="flex flex-row flex-wrap items-start gap-4 h-auto">
             {subscriptions.length > 0 ? (
-              subscriptions.map((subscription, index) => (
-                <Subscription key={index} subscription={subscription} />
+              subscriptions.map((subscription) => (
+                <Subscription
+                  key={subscription.subscription_id}
+                  subscription={subscription}
+                  onUpdate={fetchSubscriptions}
+                />
               ))
             ) : (
               <p>Подписок нет</p>
             )}
           </div>
         )}
-        <AddSubscriptionButton />
+        <AddSubscriptionButton onUpdate={fetchSubscriptions} />
       </main>
     </div>
   );

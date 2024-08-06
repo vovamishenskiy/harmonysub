@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowPathIcon, CheckIcon, XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import {PencilIcon, CheckIcon, XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { z, ZodError } from 'zod';
 
 const countries = [
@@ -257,7 +257,7 @@ const UserSettings: React.FC = () => {
                                 onClick={() => startEditing('username')}
                                 title="Редактировать имя пользователя"
                             >
-                                <ArrowPathIcon className="w-5 h-5" />
+                                <PencilIcon className="w-5 h-5" />
                             </button>
                         </div>
                     )}
@@ -299,7 +299,7 @@ const UserSettings: React.FC = () => {
                                 onClick={() => startEditing('email')}
                                 title="Редактировать электронную почту"
                             >
-                                <ArrowPathIcon className="w-5 h-5" />
+                                <PencilIcon className="w-5 h-5" />
                             </button>
                         </div>
                     )}
@@ -348,7 +348,7 @@ const UserSettings: React.FC = () => {
                                 onClick={() => startEditing('password')}
                                 title="Редактировать пароль"
                             >
-                                <ArrowPathIcon className="w-5 h-5" />
+                                <PencilIcon className="w-5 h-5" />
                             </button>
                         </div>
                     )}
@@ -392,7 +392,7 @@ const UserSettings: React.FC = () => {
                                 onClick={() => startEditing('country')}
                                 title="Редактировать страну"
                             >
-                                <ArrowPathIcon className="w-5 h-5" />
+                                <PencilIcon className="w-5 h-5" />
                             </button>
                         </div>
                     )}

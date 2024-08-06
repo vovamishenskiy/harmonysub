@@ -1,11 +1,17 @@
 'use client';
 
-import { CreditCardIcon } from "@heroicons/react/24/outline";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import { CreditCardIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import React, { useState, useEffect } from "react";
+// @ts-ignore
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
+import EditSubscription from "@/components/EditSubscriptions";
 
 interface ISubscription {
+    subscription_id: number;
+    user_id: number;
     title: string;
     price: number;
     renewal_type: string;
@@ -17,10 +23,17 @@ interface ISubscription {
 
 interface SubscriptionProps {
     subscription: ISubscription;
+    onUpdate: () => void;
 }
 
-const Subscription: React.FC<SubscriptionProps> = ({ subscription }) => {
+const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate }) => {
     const [expiring, setExpiring] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [subscriptionName, setSubscriptionName] = useState('');
+    const [price, setPrice] = useState('');
+    const [paymentCard, setPaymentCard] = useState('')
+    const [isStopped, setIsStopped] = useState(false);
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return Intl.DateTimeFormat('ru-RU', { day: 'numeric', 'month': 'long', 'year': 'numeric' }).format(date);
@@ -63,22 +76,33 @@ const Subscription: React.FC<SubscriptionProps> = ({ subscription }) => {
         }
     }, [subscription.expiry_date]);
 
+    const handleEdit = (e: any) => {
+        e.stopPropagation();
+        setEditing(!editing);
+    }
+
     return (
-        <Card className="bg-slate-100 p-4 rounded-xl w-80 h-auto">
-            <CardHeader className="flex flex-row items-center">
-                <p className="text-2xl">{subscription.title}</p>
-                {expiring && <span className="w-auto ml-auto py-1 px-2 rounded-full text-white bg-red-500 font-light text-sm">Истекает</span>}
-            </CardHeader>
-            <Divider className="my-2 " />
-            <CardBody className="flex flex-col gap-2">
-                <p>Цена: {formattedPrice}</p>
-                <p>Срок: {renewalType}</p>
-                <p>Дата начала: {startDate}</p>
-                <p>Дата окончания: {expiryDate}</p>
-                <p className="flex flex-row">Откуда оплачивается: • • • • {subscription.paid_from} <CreditCardIcon className="w-6 h-6 ml-2" title="Карта, с которой оплачивается подписка" /></p>
-                <p>Статус: {subscription.status === true ? 'остановлена' : 'действует'}</p>
-            </CardBody>
-        </Card>
+        <>
+            <Card className="bg-slate-100 p-4 rounded-xl w-80 h-auto" data-id={subscription.subscription_id}>
+                <CardHeader className="flex flex-row items-center">
+                    <p className="text-2xl hover:text-emerald-700 cursor-pointer transition ease-in-out duration-250" onClick={handleEdit}>{subscription.title}</p>
+                    {expiring && <span className="w-auto ml-auto py-1 px-2 rounded-full text-white bg-red-500 font-light text-sm">Истекает</span>}
+                </CardHeader>
+                <Divider className="my-2 " />
+                <CardBody className="flex flex-col gap-2">
+                    <p>Цена: {formattedPrice}</p>
+                    <p>Срок: {renewalType}</p>
+                    <p>Дата начала: {startDate}</p>
+                    <p>Дата окончания: {expiryDate}</p>
+                    <p className="flex flex-row">Откуда оплачивается: • • • • {subscription.paid_from} <CreditCardIcon className="w-6 h-6 ml-2" title="Карта, с которой оплачивается подписка" /></p>
+                    <p>Статус: {subscription.status === true ? 'остановлена' : 'действует'}</p>
+                </CardBody>
+            </Card>
+
+            {editing && (
+                <EditSubscription subscription={subscription} onClose={handleEdit} onUpdate={onUpdate} />
+            )}
+        </>
     );
 };
 

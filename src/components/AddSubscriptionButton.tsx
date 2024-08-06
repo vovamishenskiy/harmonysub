@@ -6,7 +6,11 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const AddSubscriptionButton = () => {
+interface AddSubscriptionButtonProps {
+    onUpdate: () => void;
+}
+
+const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate }) => {
     const [open, setOpen] = useState(false);
     const [username, setUsername] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
@@ -47,14 +51,20 @@ const AddSubscriptionButton = () => {
         e.preventDefault();
         if (!userId || !startDate) return;
 
+        const formatDate = (date: Date) => {
+            const offset = date.getTimezoneOffset();
+            const adjustedDate = new Date(date.getTime() - offset * 60 * 1000);
+            return adjustedDate.toISOString().split('T')[0];
+        }
+
         const expiryDate = new Date(startDate);
         expiryDate.setDate(expiryDate.getDate() + parseInt(renewalType, 10));
 
         const newSubscription = {
             user_id: userId,
             title: subscriptionName,
-            start_date: startDate.toISOString().split('T')[0],
-            expiry_date: expiryDate.toISOString().split('T')[0],
+            start_date: formatDate(startDate),
+            expiry_date: formatDate(expiryDate),
             price,
             renewal_type: renewalType,
             paid_from: paymentCard,
@@ -80,6 +90,7 @@ const AddSubscriptionButton = () => {
                     setRenewalType('1');
                     setPaymentCard('');
                     setIsStopped(false);
+                    onUpdate();
                 }
             })
             .catch((err) => {
@@ -94,7 +105,7 @@ const AddSubscriptionButton = () => {
                     <div className="w-1/3 h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
                         <div className="flex flex-row items-baseline justify-between">
                             <p className="text-lg mb-4">Добавить подписку</p>
-                            <button onClick={handleOpenClose} className="btn"><XMarkIcon className='w-6 h-6'/></button>
+                            <button onClick={handleOpenClose} className="btn"><XMarkIcon className='w-6 h-6' /></button>
                         </div>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">

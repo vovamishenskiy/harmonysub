@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { BellAlertIcon, BellSlashIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { BellAlertIcon, BellSlashIcon, ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
 
 const Skeleton: React.FC = () => (
     <div className='animate-pulse bg-gray-300 h-20 rounded-xl w-1/4' />
@@ -67,7 +67,7 @@ const ConnectTelegramButton = () => {
                     <div className="flex flex-row gap-2 items-start">
                         <BellAlertIcon className="w-6 h-6 mb-3" />
                         <p>Уведомления от телеграм бота подключены</p>
-                        <button className="btn btn-primary" onClick={checkConnection}><ArrowPathIcon className="w-5 h-5 mt-0.5 ml-1" /></button>
+                        <button className="btn btn-primary" onClick={checkConnection}><ArrowPathRoundedSquareIcon className="w-5 h-5 mt-0.5 ml-1" /></button>
                     </div>
                     <button onClick={handleDisconnect} className="btn btn-primary rounded-xl w-80 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Отключить уведомления
@@ -78,7 +78,7 @@ const ConnectTelegramButton = () => {
                     <div className="flex flex-row gap-2 items-start pl-2">
                         <BellSlashIcon className="w-6 h-6 mb-3" />
                         <p>Уведомления от телеграм бота отключены</p>
-                        <button className="btn btn-primary" onClick={checkConnection}><ArrowPathIcon className="w-5 h-5 mt-0.5 ml-1" /></button>
+                        <button className="btn btn-primary" onClick={checkConnection}><ArrowPathRoundedSquareIcon className="w-5 h-5 mt-0.5 ml-1" /></button>
                     </div>
                     <button onClick={handleConnect} className="btn btn-primary rounded-xl w-80 p-2 bg-emerald-700 hover:bg-emerald-600 text-white transition ease">
                         Подключить уведомления
