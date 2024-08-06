@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, XMarkIcon, CalendarDateRangeIcon, CreditCardIcon } from '@heroicons/react/24/outline';
 // @ts-ignore
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -120,13 +120,16 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Дата начала подписки</label>
-                                <DatePicker
-                                    selected={startDate}
-                                    onChange={(date: any) => setStartDate(date)}
-                                    className="block w-[608px] p-2 border rounded-xl bg-transparent h-12 outline-none"
-                                    dateFormat="dd/MM/yyyy"
-                                    required
-                                />
+                                <div className="flex flex-row items-center gap-1 flex-shrink-0">
+                                    <DatePicker
+                                        selected={startDate}
+                                        onChange={(date: any) => setStartDate(date)}
+                                        className="block w-[589px] p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                        dateFormat="dd/MM/yyyy"
+                                        required
+                                    />
+                                    <CalendarDateRangeIcon className='min-w-5 min-h-5' />
+                                </div>
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Цена</label>
@@ -162,18 +165,21 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Откуда оплачивается подписка (последние 4 цифры карты)</label>
-                                <input
-                                    type="text"
-                                    className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
-                                    value={paymentCard}
-                                    onChange={(e) => setPaymentCard(e.target.value)}
-                                    maxLength={4}
-                                    required
-                                />
+                                <div className="flex flex-row gap-1 items-center flex-shrink-0">
+                                    <input
+                                        type="text"
+                                        className="block w-[589px] p-2 border rounded-xl bg-transparent h-12 outline-none flex-shrink-0"
+                                        value={paymentCard}
+                                        onChange={(e) => setPaymentCard(e.target.value)}
+                                        maxLength={4}
+                                        required
+                                    />
+                                    <CreditCardIcon className='min-w-5 min-h-5' />
+                                </div>
                             </div>
                             <div className="mb-4">
                                 <div className="flex gap-2 items-center">
-                                    <span className="ml-2">Подписка остановлена?</span>
+                                    <span>Подписка остановлена?</span>
                                     <input
                                         type="checkbox"
                                         checked={isStopped}

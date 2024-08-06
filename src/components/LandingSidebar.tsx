@@ -13,23 +13,24 @@ const LandingSidebar: React.FC = () => {
     }
 
     return (
-        <aside className="flex flex-col h-100vh-24px min-w-64 max-w-64 bg-emerald-800 text-white p-4 ml-3 mt-3 mb-3 rounded-2xl">
+        <aside className="flex lg:flex-col sm:flex-row h-100vh-24px sm:h-12 lg:min-w-64 lg:max-w-64 bg-emerald-800 text-white lg:p-4 lg:ml-3 lg:mt-3 lg:mb-3 lg:rounded-2xl sm:rounded-none sm:fixed sm:bottom-0 sm:min-w-full sm:m-0 lg:relative">
             <nav className="flex-grow">
-                <Link href='/'><h4 className="text-xl text-center text-emerald-600 hover:text-emerald-500 transition ease-in-out mb-5">harmonysub</h4></Link>
-                <ul>
-                    <li className="mb-6">
+                <Link href='/' className="lg:block sm:hidden"><h4 className="text-xl text-center text-emerald-600 hover:text-emerald-500 transition ease-in-out mb-5">harmonysub</h4></Link>
+                <ul className="sm:flex sm:flex-row sm:items-center sm:justify-around lg:flex lg:flex-col">
+                    <li className="mb-6 sm:m-0">
                         <Link href='/login'>
                             <span className={isActiveLink('/login')}>
-                                <ArrowRightEndOnRectangleIcon className="h-6 w-6 mr-3" />
-                                Вход
+                                <ArrowRightEndOnRectangleIcon className="h-6 w-6 mr-3 sm:m-0" />
+                                <p className="sm:hidden">Вход</p>
                             </span>
                         </Link>
                     </li>
-                    <li className="mb-6">
+                    <Link href='/' className="sm:block lg:hidden"><h4 className="text-xl text-center text-emerald-600 hover:text-emerald-500 transition ease-in-out mb-3 mt-2">harmonysub</h4></Link>
+                    <li className="mb-6 sm:m-0">
                         <Link href='/registration'>
                             <span className={isActiveLink('/registration')}>
-                                <UserPlusIcon className="h-6 w-6 mr-3" />
-                                Регистрация
+                                <UserPlusIcon className="h-6 w-6 mr-3 sm:m-0" />
+                                <p className="sm:hidden">Регистрация</p>
                             </span>
                         </Link>
                     </li>

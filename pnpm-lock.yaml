@@ -20,6 +20,9 @@ importers:
       '@nextui-org/card':
         specifier: ^2.0.33
         version: 2.0.33(@nextui-org/system@2.2.5(@nextui-org/theme@2.2.9(tailwindcss@3.4.7))(framer-motion@11.3.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@nextui-org/theme@2.2.9(tailwindcss@3.4.7))(framer-motion@11.3.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@nextui-org/date-picker':
+        specifier: ^2.1.6
+        version: 2.1.6(@nextui-org/system@2.2.5(@nextui-org/theme@2.2.9(tailwindcss@3.4.7))(framer-motion@11.3.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@nextui-org/theme@2.2.9(tailwindcss@3.4.7))(@types/react@18.3.3)(framer-motion@11.3.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@nextui-org/divider':
         specifier: ^2.0.31
         version: 2.0.31(@nextui-org/theme@2.2.9(tailwindcss@3.4.7))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4942,7 +4945,7 @@ snapshots:
       '@internationalized/number': 3.5.3
       '@internationalized/string': 3.2.3
       '@react-aria/ssr': 3.9.5(react@18.3.1)
-      '@react-aria/utils': 3.24.1(react@18.3.1)
+      '@react-aria/utils': 3.25.1(react@18.3.1)
       '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.5
       react: 18.3.1

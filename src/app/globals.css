@@ -8,8 +8,10 @@
   }
 }
 
-.h-100vh-24px {
-  height: calc(100vh - 24px);
+@media (min-width: 1024px) {
+  .h-100vh-24px {
+    height: calc(100vh - 24px) !important;
+  }
 }
 
 .h-30px {

@@ -108,13 +108,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
         <div className='w-full m-auto'>
             {isRegistered ? (
                 <div>
-                    <h2 className='text-4xl font-bold mb-6 text-emerald-700'>Вы успешно зарегистрировались!</h2>
+                    <h2 className='text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl'>Вы успешно зарегистрировались!</h2>
                     <button onClick={() => router.push('/login')} className='px-12 bg-emerald-700 hover:bg-emerald-600 transition ease-in-out text-white py-2 rounded-xl mt-4'>Вход</button>
                 </div>
             ) : (
-                <form onSubmit={handleSubmit} className='w-5/6 h-1/2 m-auto'>
-                    <h2 className="text-4xl font-bold mb-6 text-emerald-700">Регистрация</h2>
-
+                <form onSubmit={handleSubmit} className='w-5/6 h-1/2 m-auto sm:pt-2'>
+                    <h2 className="text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl">Регистрация</h2>
                     <div className="flex flex-col gap max-w-full w-1/2 mx-auto">
                         <div className="flex flex-col gap w-auto">
                             <div className="mb-4">

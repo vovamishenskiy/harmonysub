@@ -3,13 +3,17 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className='flex flex-row'>
+    <div className='flex lg:flex-row sm:flex-col'>
       <main className="w-full flex flex-col relative">
-        <div className="flex flex-row text-center">
+        <div className="flex lg:flex-row sm:flex-col text-center">
           <LandingSidebar />
-          <div className="flex flex-col gap-3 text center  m-auto">
-            <h1 className="w-full text-6xl text-emerald-700">Добро пожаловать в harmonysub</h1>
-            <p className="text-xl text-emerald-600"><Link href='/login' className='hover:text-emerald-500 transition ease-in-out'>Войдите</Link> или <Link href='/registration' className='hover:text-emerald-500 transition ease-in-out'>зарегистрируйтесь</Link>, чтобы  продолжить</p>
+          <div className="flex flex-col gap-3 text-center m-auto sm:px-3 sm:h-screen">
+            <div className="sm:block lg:hidden sm:h-[40%]"></div>
+            <div className='flex flex-col gap-3 text-center'>
+              <h1 className="w-full text-6xl sm:text-2xl text-emerald-700">Добро пожаловать в harmonysub</h1>
+              <p className="text-xl sm:text-base text-emerald-600"><Link href='/login' className='hover:text-emerald-500 transition ease-in-out'>Войдите</Link> или <Link href='/registration' className='hover:text-emerald-500 transition ease-in-out'>зарегистрируйтесь</Link>, чтобы  продолжить</p>
+            </div>
+            <div className="sm:block lg:hidden sm:h-[40%]"></div>
           </div>
         </div>
       </main>
