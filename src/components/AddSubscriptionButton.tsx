@@ -101,8 +101,8 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
     return (
         <>
             {open ? (
-                <div className='w-full h-full z-[212] opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={handleOpenClose}>
-                    <div className="w-1/3 h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
+                <div className='w-full h-full z-[212] sm:px-3 lg:px-0 opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={handleOpenClose}>
+                    <div className="lg:w-1/3 sm:w-full h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
                         <div className="flex flex-row items-baseline justify-between">
                             <p className="text-lg mb-4">Добавить подписку</p>
                             <button onClick={handleOpenClose} className="btn"><XMarkIcon className='w-6 h-6' /></button>
@@ -124,11 +124,11 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                     <DatePicker
                                         selected={startDate}
                                         onChange={(date: any) => setStartDate(date)}
-                                        className="block w-[589px] p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                        className="block lg:w-[589px] sm:w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
                                         dateFormat="dd/MM/yyyy"
                                         required
                                     />
-                                    <CalendarDateRangeIcon className='min-w-5 min-h-5' />
+                                    <CalendarDateRangeIcon className='min-w-5 min-h-5 sm:minx-w-5 sm:max-w-5' />
                                 </div>
                             </div>
                             <div className="mb-4">
@@ -168,13 +168,13 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                 <div className="flex flex-row gap-1 items-center flex-shrink-0">
                                     <input
                                         type="text"
-                                        className="block w-[589px] p-2 border rounded-xl bg-transparent h-12 outline-none flex-shrink-0"
+                                        className="block lg:w-[589px] sm:w-full p-2 border rounded-xl bg-transparent h-12 outline-none flex-shrink-0"
                                         value={paymentCard}
                                         onChange={(e) => setPaymentCard(e.target.value)}
                                         maxLength={4}
                                         required
                                     />
-                                    <CreditCardIcon className='min-w-5 min-h-5' />
+                                    <CreditCardIcon className='min-w-5 min-h-5 sm:hidden lg:block' />
                                 </div>
                             </div>
                             <div className="mb-4">
@@ -201,9 +201,10 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
             ) : (
                 <button className="
                     btn btn-primary bg-emerald-800 hover:bg-emerald-700 
-                    absolute bottom-10 right-10 w-14 h-14 flex 
+                    fixed lg:bottom-10 lg:right-10 w-14 h-14 flex 
                     justify-center items-center rounded-full 
-                    transition ease-in-out duration-200 hover:rotate-90
+                    transition ease-in-out duration-200 hover:rotate-90 lg:z-[211]
+                    sm:z-[-1] sm:bottom-14 sm:right-2
                 "
                     onClick={handleOpenClose}>
                     <PlusIcon className='w-8 h-8 text-white' />

@@ -42,7 +42,7 @@ const Subscriptions: React.FC = () => {
   return (
     <div className='flex flex-row'>
       <Sidebar />
-      <main className="flex flex-col mt-3 ml-4 w-full">
+      <main className="flex flex-col lg:mt-3 lg:ml-4 lg:mr-0 sm:ml-3 sm:mr-3 w-full">
         <h1 className="text-3xl mb-5">Подписки</h1>
         {loading ? (
           <div className="space-y-4">
@@ -51,7 +51,8 @@ const Subscriptions: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="flex flex-row flex-wrap items-start gap-4 h-auto">
+          <div className="flex flex-row flex-wrap lg:items-start lg:justify-normal lg:gap-4 h-auto
+            sm:items-center sm:gap-3 sm:justify-between">
             {subscriptions.length > 0 ? (
               subscriptions.map((subscription) => (
                 <Subscription

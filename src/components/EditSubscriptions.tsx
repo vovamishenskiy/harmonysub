@@ -101,7 +101,7 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClo
 
     return (
         <div className='w-full h-full z-[212] opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={onClose}>
-            <div className="w-1/3 h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
+            <div className="lg:w-1/3 sm:w-full sm:mx-3 h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
                 <div className="flex flex-row items-baseline justify-between">
                     <p className="text-lg mb-4">Редактировать подписку</p>
                     <button onClick={onClose} className="btn"><XMarkIcon className='w-6 h-6' /></button>
@@ -184,13 +184,13 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClo
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="btn btn-primary bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded-xl"
+                            className="btn btn-primary bg-red-600 hover:bg-red-500 text-white lg:py-2 sm:py-1 lg:px-4 sm:px-2 lg:text-base sm:text-sm rounded-xl"
                         >
                             Удалить подписку
                         </button>
                         <button
                             type="submit"
-                            className="btn btn-primary bg-emerald-800 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl"
+                            className="btn btn-primary bg-emerald-800 hover:bg-emerald-700 text-white lg:py-2 sm:py-1 lg:px-4 sm:px-2 lg:text-base sm:text-sm rounded-xl"
                         >
                             Сохранить изменения
                         </button>

@@ -105,16 +105,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
     };
 
     return (
-        <div className='w-full m-auto'>
+        <div className='w-full m-auto sm:h-full sm:flex sm:flex-col'>
             {isRegistered ? (
-                <div>
+                <div className='sm:mt-[50%] lg:mt-0'>
                     <h2 className='text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl'>Вы успешно зарегистрировались!</h2>
                     <button onClick={() => router.push('/login')} className='px-12 bg-emerald-700 hover:bg-emerald-600 transition ease-in-out text-white py-2 rounded-xl mt-4'>Вход</button>
                 </div>
             ) : (
-                <form onSubmit={handleSubmit} className='w-5/6 h-1/2 m-auto sm:pt-2'>
+                <form onSubmit={handleSubmit} className='w-5/6 h-1/2 lg:h-2/3 lg:w-2/6 lg:m-auto sm:mt-3'>
                     <h2 className="text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl">Регистрация</h2>
-                    <div className="flex flex-col gap max-w-full w-1/2 mx-auto">
+                    <div className="flex flex-col gap max-w-full w-1/2 mx-auto sm:w-full">
                         <div className="flex flex-col gap w-auto">
                             <div className="mb-4">
                                 <input
@@ -451,8 +451,15 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                             </div>
                         </div>
 
-                        <div className="w-80 flex flex-col items-center mx-auto">
-                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} />
+                        <div className="w-80 lg:flex flex-col items-center mx-auto sm:hidden">
+                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha}/>
+
+                            <button type='submit' disabled={!captchaToken} className='w-full mx-auto bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
+                                Зарегистрироваться
+                            </button>
+                        </div>
+                        <div className="sm:w-full hidden flex-col items-center mx-auto sm:flex lg:hidden">
+                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} size='compact'/>
 
                             <button type='submit' disabled={!captchaToken} className='w-full mx-auto bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
                                 Зарегистрироваться
