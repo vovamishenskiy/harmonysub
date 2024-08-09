@@ -5,6 +5,7 @@ import Subscription from '@/components/Subscription';
 import SubscriptionSkeleton from '@/components/SubscriptionSkeleton';
 import Sidebar from '@/components/Sidebar';
 import AddSubscriptionButton from '@/components/AddSubscriptionButton';
+import Image from 'next/image';
 
 interface ISubscription {
   subscription_id: number;
@@ -19,10 +20,16 @@ interface ISubscription {
   is_locked: boolean;
   locked_by_user_id: number | null;
 };
+
+interface IUser {
+  username: string;
+  avatar_url: string;
+}
+
 const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [invitedUser, setInvitedUser] = useState<IUser | null>(null);
 
   const fetchSubscriptions = () => {
     fetch('/api/subscriptions')
@@ -46,7 +53,15 @@ const Subscriptions: React.FC = () => {
     <div className='flex flex-row'>
       <Sidebar />
       <main className="flex flex-col lg:mt-3 lg:ml-4 lg:mr-0 sm:ml-3 sm:mr-3 w-full">
-        <h1 className="text-3xl mb-5">Подписки</h1>
+        <div className="flex flex-row gap-2">
+          <h1 className="text-3xl mb-5">Подписки</h1>
+          {invitedUser && (
+            <div className="flex flex-row gap-1">
+              <span className='text-3xl'>+</span>
+              <Image src={invitedUser.avatar_url} width={24} height={24} alt={`Приглашённый пользователь ${invitedUser.username}`} className="lg:h-6 lg:w-6 lg:mr-3 sm:mr-0 rounded-full" />
+            </div>
+          )}
+        </div>
         {loading ? (
           <div className="space-y-4">
             {Array.from({ length: subscriptions.length || 1 }).map((_, index) => (
