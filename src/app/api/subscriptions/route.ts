@@ -20,17 +20,16 @@ export async function GET(req: NextRequest) {
         `;
         const userSubId = userSubIdResult.rows[0]?.user_sub_id;
 
-        await sql`
-            INSERT INTO shared_subscriptions (subscription_id, user_id)
-            SELECT subscription_id, ${userSubId} FROM subscriptions WHERE user_id = ${userId}
-            ON CONFLICT DO NOTHING;
-        `;
-
         const result = await sql`
             SELECT s.*
             FROM subscriptions s
             WHERE s.user_id = ${userId}
-            OR s.user_id = ${userSubId};
+            OR s.user_id = ${userSubId}
+            UNION
+            SELECT ss.*
+            FROM subscriptions ss
+            INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
+            WHERE shs.user_id = ${userSubId};
         `;
         const subscriptions = result.rows;
 
