@@ -15,11 +15,16 @@ export async function GET(req: NextRequest) {
         const decoded = jwt.verify(token, JWT_SECRET as string) as { userId: string };
         const userId = decoded.userId;
 
+        const userSubIdResult = await sql`
+            SELECT user_sub_id FROM users WHERE user_id = ${userId} LIMIT 1;
+        `;
+        const userSubId = userSubIdResult.rows[0]?.user_sub_id;
+
         const result = await sql`
             SELECT s.*
             FROM subscriptions s
             WHERE s.user_id = ${userId}
-            OR s.user_id = (SELECT user_sub_id FROM users WHERE user_id = ${userId} LIMIT 1);
+            OR s.user_id = ${userSubId};
         `;
         const subscriptions = result.rows;
 
