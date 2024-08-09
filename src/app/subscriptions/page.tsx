@@ -30,6 +30,36 @@ const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [invitedUser, setInvitedUser] = useState<IUser | null>(null);
+  const [error, setError] = useState('');
+  const [userId, setUserId] = useState(null);
+
+  const getUserId = async (username: string) => {
+    try {
+      const response = await fetch(`/api/getUserData?username=${username}`);
+      const data = await response.json();
+      if (response.ok) {
+        setUserId(data.user_id);
+      } else {
+        setError(data.error || 'Ошибка при получении данных пользователя');
+      }
+    } catch (error) {
+      setError('Ошибка при получении данных пользователя');
+      console.error('Ошибка при получении данных пользователя: ', error);
+    }
+  }
+
+  const fetchInvitedUser = (userId: number) => {
+    fetch(`/api/getSubUser?userId=${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          setInvitedUser({ username: data.username, avatar_url: data.avatar_url });
+        }
+      })
+      .catch((err) => {
+        console.error('Ошибка при получении информации о приглашённом пользователе: ', err);
+      })
+  }
 
   const fetchSubscriptions = () => {
     fetch('/api/subscriptions')
@@ -45,9 +75,14 @@ const Subscriptions: React.FC = () => {
   };
 
   useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) getUserId(storedUsername);
+
+    if (userId) fetchInvitedUser(userId);
+
     const interval = setInterval(fetchSubscriptions, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [userId]);
 
   return (
     <div className='flex flex-row'>
