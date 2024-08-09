@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
         await sql`
             INSERT INTO shared_subscriptions (subscription_id, user_id)
-            SELECT subscription_id, ${invite.recipient_id} FROM subscriptions WHERE user_id = ${invite.sender_id};
+            SELECT subscription_id, ${invite.recipient_id} FROM subscriptions WHERE user_id = ${invite.sender_id} ON CONFLICT DO NOTHING;
         `;
 
         await sql`
