@@ -45,13 +45,23 @@ const Invitations: React.FC = () => {
         }
     };
 
+    const pollInvitations = async (userId: number) => {
+        while (true) {
+            await fetchInvitations(userId);
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+        }
+    };
+
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         if (storedUsername) getUserId(storedUsername);
     }, []);
 
     useEffect(() => {
-        if (userId) fetchInvitations(userId);
+        if (userId) {
+            fetchInvitations(userId);
+            pollInvitations(userId);
+        }
     }, [userId]);
 
     const handleAccept = async (invitationId: number) => {

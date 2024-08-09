@@ -25,9 +25,10 @@ interface ISubscription {
 interface SubscriptionProps {
     subscription: ISubscription;
     onUpdate: () => void;
+    currentUser: number;
 }
 
-const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate }) => {
+const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate, currentUser }) => {
     const [expiring, setExpiring] = useState(false);
     const [editing, setEditing] = useState(false);
     const [subscriptionName, setSubscriptionName] = useState('');
@@ -78,9 +79,24 @@ const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate }) =
         }
     }, [subscription.expiry_date]);
 
-    const handleEdit = (e: any) => {
+    const handleEdit = async (e: any) => {
         e.stopPropagation();
-        setEditing(!editing);
+
+        const response = await fetch('/api/lockSubscription', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ subscriptionId: subscription.subscription_id, userId: currentUser }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setEditing(true);
+        } else {
+            alert(data.error || 'Не удалось заблокировать подписку для редактирования');
+        }
     }
 
     const handleMobileDetails = (e: any) => {
@@ -129,7 +145,7 @@ const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate }) =
             </div>
 
             {editing && (
-                <EditSubscription subscription={subscription} onClose={handleEdit} onUpdate={onUpdate} />
+                <EditSubscription subscription={subscription} onClose={() => setEditing(false)} onUpdate={onUpdate} currentUser={currentUser} />
             )}
         </>
     );

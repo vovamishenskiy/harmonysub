@@ -19,9 +19,10 @@ interface EditSubscriptionProps {
     subscription: ISubscription;
     onClose: (e: any) => void;
     onUpdate: () => void;
+    currentUser: number;
 }
 
-const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClose, onUpdate }) => {
+const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClose, onUpdate, currentUser }) => {
     const [subscriptionName, setSubscriptionName] = useState(subscription.title);
     const [price, setPrice] = useState(subscription.price.toString());
     const [renewalType, setRenewalType] = useState(subscription.renewal_type);
@@ -65,15 +66,34 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClo
             .then((data) => {
                 if (data.error) {
                     console.log('Ошибка при обновлении подписки: ', data.error);
-                } else {
-                    onClose(e);
+                } else if (data.success) {
+                    handleClose(e);
                     onUpdate();
+                } else {
+                    alert(data.error || 'Не удалось обновить подписку');
                 }
             })
             .catch((err) => {
                 console.error('Ошибка при обновлении подписки: ', err);
             })
     }
+
+    const handleClose = (e: any) => {
+        fetch('/api/unlockSubscription', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ subscriptionId: subscription.subscription_id, userId: currentUser }),
+        })
+            .then(() => {
+                onClose(e);
+            })
+            .catch((error) => {
+                console.error('Ошибка при снятии блокировки подписки: ', error);
+                onClose(e);
+            });
+    };
 
     const handleDelete = (e: any) => {
         e.preventDefault();
@@ -100,11 +120,11 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClo
     }
 
     return (
-        <div className='w-full h-full z-[212] opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={onClose}>
+        <div className='w-full h-full z-[212] opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={handleClose}>
             <div className="lg:w-1/3 sm:w-full sm:mx-3 h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
                 <div className="flex flex-row items-baseline justify-between">
                     <p className="text-lg mb-4">Редактировать подписку</p>
-                    <button onClick={onClose} className="btn"><XMarkIcon className='w-6 h-6' /></button>
+                    <button onClick={onClose} className="btn"><XMarkIcon className='w-6 h-6' onClick={handleClose} /></button>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">

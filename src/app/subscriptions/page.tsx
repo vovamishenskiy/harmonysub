@@ -16,11 +16,15 @@ interface ISubscription {
   expiry_date: string;
   paid_from: string;
   status: boolean;
+  is_locked: boolean;
+  locked_by_user_id: number | null;
+  currentUser: number;
 };
 
-const Subscriptions: React.FC = () => {
+const Subscriptions: React.FC<ISubscription> = ({ currentUser }) => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const fetchSubscriptions = () => {
     fetch('/api/subscriptions')
@@ -36,7 +40,8 @@ const Subscriptions: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchSubscriptions();
+    const interval = setInterval(fetchSubscriptions, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -59,6 +64,7 @@ const Subscriptions: React.FC = () => {
                   key={subscription.subscription_id}
                   subscription={subscription}
                   onUpdate={fetchSubscriptions}
+                  currentUser={currentUser}
                 />
               ))
             ) : (
