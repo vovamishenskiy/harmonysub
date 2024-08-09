@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         await sql`
-            DELETE FORM invitations WHERE invite_id = ${invitationId};
+            DELETE FROM invitations WHERE invite_id = ${invitationId};
         `;
 
         return NextResponse.json({ message: 'Приглашение удалено' }, { status: 200 });
