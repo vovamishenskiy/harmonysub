@@ -88,15 +88,16 @@ const Subscriptions: React.FC = () => {
     <div className='flex flex-row'>
       <Sidebar />
       <main className="flex flex-col lg:mt-3 lg:ml-4 lg:mr-0 sm:ml-3 sm:mr-3 w-full">
-        <div className="flex flex-row gap-2">
-          <h1 className="text-3xl mb-5">Подписки</h1>
+        <h1 className="text-3xl mb-5 flex flex-row items-center gap-2">
+          Подписки
           {invitedUser && (
-            <div className="flex flex-row gap-1">
-              <span className='text-3xl'>+</span>
-              <Image src={invitedUser.avatar_url} width={24} height={24} alt={`Приглашённый пользователь ${invitedUser.username}`} className="lg:h-6 lg:w-6 lg:mr-3 sm:mr-0 rounded-full" />
+            <div className="flex flex-row items-center gap-1">
+              <span className='text-xl font-normal'>+</span>
+              <Image src={invitedUser.avatar_url} title={`Приглашённый пользователь ${invitedUser.username}`} width={24} height={24} alt={`Приглашённый пользователь ${invitedUser.username}`} className="lg:h-6 lg:w-6 lg:mr-3 sm:mr-0 rounded-full" />
             </div>
           )}
-        </div>
+        </h1>
+
         {loading ? (
           <div className="space-y-4">
             {Array.from({ length: subscriptions.length || 1 }).map((_, index) => (

@@ -4,14 +4,19 @@ import { sql } from '@vercel/postgres';
 export async function DELETE(req: NextRequest) {
     try {
         const body = await req.json();
-        const { subscription_id } = body;
+        const { subscription_id, user_id } = body;
 
         if (!subscription_id) {
             return NextResponse.json({ error: 'ID подписки не найден' }, { status: 400 });
         }
 
+        const userSubIdResult = await sql`
+            SELECT user_sub_id FROM users WHERE user_id = ${user_id} LIMIT 1;
+        `;
+        const invitedUserId = userSubIdResult.rows[0]?.user_sub_id || user_id;
+
         const result = await sql`
-            DELETE FROM subscriptions WHERE subscription_id = ${subscription_id}
+            DELETE FROM subscriptions WHERE subscription_id = ${subscription_id} AND user_id = ${invitedUserId}
             RETURNING *;
         `;
 

@@ -103,7 +103,7 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClo
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ subscription_id: subscription.subscription_id }),
+            body: JSON.stringify({ subscription_id: subscription.subscription_id, user_id: currentUser }),
         })
             .then((res) => res.json())
             .then((data) => {

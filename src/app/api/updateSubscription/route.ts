@@ -18,10 +18,15 @@ export async function PUT(req: NextRequest) {
 
         if (!subscription_id) return NextResponse.json({ error: 'ID подписки не найден' }, { status: 400 });
 
+        const userSubIdResult = await sql`
+            SELECT user_sub_id FROM users WHERE user_id = ${user_id} LIMIT 1;
+        `;
+        const invitedUserId = userSubIdResult.rows[0]?.user_sub_id || user_id;
+
         const result = await sql`
             UPDATE subscriptions
             SET title = ${title}, price = ${price}, renewal_type = ${renewal_type}, start_date = ${start_date}, expiry_date = ${expiry_date}, paid_from = ${paid_from}, status = ${status}
-            WHERE subscription_id = ${subscription_id}
+            WHERE subscription_id = ${subscription_id} AND user_id = ${invitedUserId}
             RETURNING *;
         `;
 

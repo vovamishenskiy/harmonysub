@@ -33,10 +33,15 @@ export async function POST(req: NextRequest) {
         const expiryDate = new Date(startDate);
         expiryDate.setDate(startDate.getDate() + renewalDays);
 
+        const userSubIdResult = await sql`
+            SELECT user_sub_id FROM users WHERE user_id = ${user_id} LIMIT 1;
+        `;
+        const invitedUserId = userSubIdResult.rows[0]?.user_sub_id || user_id;
+
         const result = await sql`
             INSERT INTO subscriptions(user_id, title, start_date, expiry_date, price, renewal_type, paid_from, status)
             VALUES (
-                ${user_id},
+                ${invitedUserId},
                 ${title},
                 ${startDate.toISOString().split('T')[0]},
                 ${expiryDate.toISOString().split('T')[0]},
