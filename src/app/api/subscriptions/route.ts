@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
         await sql`
             INSERT INTO shared_subscriptions (subscription_id, user_id)
             SELECT subscription_id, ${userSubId} FROM subscriptions WHERE user_id = ${userId}
-            ON CONFICT DO NOTHING;
+            ON CONFLICT DO NOTHING;
         `;
 
         const result = await sql`
