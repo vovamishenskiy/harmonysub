@@ -18,8 +18,7 @@ export async function GET(req: NextRequest) {
         const userSubIdResult = await sql`
             SELECT user_sub_id FROM users WHERE user_id = ${userId} LIMIT 1;
         `;
-        const userSubId = userSubIdResult.rows[0]?.user_sub_id;
-        console.log(userSubId);
+        const userSubId = userSubIdResult.rows[0]?.user_sub_id || userId;
 
         const result = await sql`
             SELECT s.*
