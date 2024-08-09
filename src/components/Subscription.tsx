@@ -25,10 +25,9 @@ interface ISubscription {
 interface SubscriptionProps {
     subscription: ISubscription;
     onUpdate: () => void;
-    currentUser: number;
 }
 
-const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate, currentUser }) => {
+const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate }) => {
     const [expiring, setExpiring] = useState(false);
     const [editing, setEditing] = useState(false);
     const [subscriptionName, setSubscriptionName] = useState('');
@@ -36,6 +35,23 @@ const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate, cur
     const [paymentCard, setPaymentCard] = useState('')
     const [isStopped, setIsStopped] = useState(false);
     const [mobileDetailsOpen, setMobileDetailsOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState<number | null>(null);
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            fetch(`/api/getUserData?username=${storedUsername}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.user_id) {
+                        setCurrentUser(data.user_id);
+                    }
+                })
+                .catch((err) => {
+                    console.error('Ошибка при загрузке данных пользователя: ', err);
+                });
+        }
+    }, []);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);

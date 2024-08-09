@@ -19,7 +19,7 @@ interface EditSubscriptionProps {
     subscription: ISubscription;
     onClose: (e: any) => void;
     onUpdate: () => void;
-    currentUser: number;
+    currentUser: number | null;
 }
 
 const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClose, onUpdate, currentUser }) => {

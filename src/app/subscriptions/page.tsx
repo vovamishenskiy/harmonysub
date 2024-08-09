@@ -19,12 +19,7 @@ interface ISubscription {
   is_locked: boolean;
   locked_by_user_id: number | null;
 };
-
-interface SubscriptionsProps {
-  currentUser: number;
-}
-
-const Subscriptions: React.FC<SubscriptionsProps> = ({ currentUser }) => {
+const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -67,7 +62,6 @@ const Subscriptions: React.FC<SubscriptionsProps> = ({ currentUser }) => {
                   key={subscription.subscription_id}
                   subscription={subscription}
                   onUpdate={fetchSubscriptions}
-                  currentUser={currentUser}
                 />
               ))
             ) : (
