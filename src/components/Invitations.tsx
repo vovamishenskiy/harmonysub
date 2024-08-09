@@ -41,14 +41,17 @@ const Invitations: React.FC = () => {
             }
         } catch (error) {
             setError('Ошибка при получении приглашений');
-            console.error('Ошибка')
+            console.error('Ошибка: ', error);
         }
     };
 
     const pollInvitations = async (userId: number) => {
         while (true) {
             await fetchInvitations(userId);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            await new Promise((resolve) => {
+                setError('');
+                setTimeout(resolve, 5000)
+            });
         }
     };
 
@@ -88,6 +91,30 @@ const Invitations: React.FC = () => {
         }
     }
 
+    const handleDecline = async (invitationId: number) => {
+        try {
+            const response = await fetch('/api/declineInvitation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ invitationId }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setInvitations(invitations.filter((invitation) => invitation.invite_id !== invitationId));
+                setMessage('Приглашение удалено');
+            } else {
+                setError(data.error);
+            }
+        } catch (error) {
+            setError('Ошибка при удалении приглашения');
+            console.error('Ошибка при удалении приглашения: ', error);
+        }
+    }
+
     return (
         <div className='flex flex-col'>
             <h2 className='font-medium mb-2 mt-2'>Ваши приглашения</h2>
@@ -105,7 +132,7 @@ const Invitations: React.FC = () => {
                             <button onClick={() => handleAccept(invitation.invite_id)} className='btn w-1/2 bg-emerald-700 p-1 rounded-xl text-white'>
                                 Принять
                             </button>
-                            <button className='btn w-1/2 bg-red-600 p-1 rounded-xl text-white'>
+                            <button onClick={() => handleDecline(invitation.invite_id)} className='btn w-1/2 bg-red-600 p-1 rounded-xl text-white'>
                                 Удалить
                             </button>
                         </div>
