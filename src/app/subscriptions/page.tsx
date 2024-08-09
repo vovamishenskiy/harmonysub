@@ -18,10 +18,13 @@ interface ISubscription {
   status: boolean;
   is_locked: boolean;
   locked_by_user_id: number | null;
-  currentUser: number;
 };
 
-const Subscriptions: React.FC<ISubscription> = ({ currentUser }) => {
+interface SubscriptionsProps {
+  currentUser: number;
+}
+
+const Subscriptions: React.FC<SubscriptionsProps> = ({ currentUser }) => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
