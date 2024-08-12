@@ -17,8 +17,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Приглашение не найдено' }, { status: 404 });
         }
 
+        const userSubIdResult = await sql`
+            SELECT user_sub_id FROM users where user_id = ${userId} LIMIT 1;
+        `;
+        const userSubId = userSubIdResult.rows[0]?.user_sub_id;
+
         await sql`
             DELETE FROM invitations WHERE sender_id = ${userId};
+            DELETE FROM shared_subscriptions WHERE user_id = ${userSubId};
             UPDATE users SET user_sub_id = null WHERE user_id = ${userId};
         `;
 
