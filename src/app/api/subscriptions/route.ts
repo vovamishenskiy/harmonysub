@@ -18,28 +18,28 @@ export async function GET(req: NextRequest) {
         const userResult = await sql`
             SELECT user_sub_id, user_add_id FROM users WHERE user_id = ${userId} LIMIT 1;
         `;
-        const userSubId = userResult.rows[0]?.user_sub_id;
-        const userAddId = userResult.rows[0]?.user_add_id;
+        const childUserId = userResult.rows[0]?.user_sub_id;
+        const parentUserId = userResult.rows[0]?.user_add_id;
 
         let subscriptions;
 
-        if (userAddId) {
+        if (childUserId || parentUserId) {
             subscriptions = await sql`
                 SELECT s.*
                 FROM subscriptions s
-                WHERE s.user_id = ${userId}
-                OR s.user_id = ${userAddId}
+                WHERE (s.user_id = ${userId} OR s.user_id = ${parentUserId} OR s.user_id = ${childUserId})\
+                AND s.personal = false
                 UNION
                 SELECT ss.*
                 FROM subscriptions ss
                 INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
-                WHERE shs.user_id = ${userAddId} AND ss.personal = false;
+                WHERE shs.user_id = ${childUserId} AND ss.personal = false;
             `;
         } else {
             subscriptions = await sql`
                 SELECT s.*
                 FROM subscriptions s
-                WHERE s.user_id = ${userId} and s.personal = false;
+                WHERE s.user_id = ${userId};
             `;
         }
 

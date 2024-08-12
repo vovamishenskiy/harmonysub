@@ -123,6 +123,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     placeholder='Имя'
                                     value={formData.name}
                                     onChange={handleChange}
+                                    autoFocus
                                     className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.name ? 'border-red-500' : ''}`}
                                     aria-invalid={!!errors.name}
                                     aria-describedby='name-error'

@@ -16,6 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     const [loading, setLoading] = useState(true);
     const [userPopoverOpen, setUserPopoverOpen] = useState(false);
     const [isInvited, setIsInvited] = useState(false);
+    const [isBeingInvited, setIsBeingInvited] = useState(false);
     const [error, setError] = useState('');
     const [userId, setUserId] = useState(null);
     const router = useRouter();
@@ -37,17 +38,28 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     }
 
     useEffect(() => {
-        getUserId(String(username));
+        if(username) getUserId(username);
 
-        const checkInvited = async () => {
-            const response = await fetch(`/api/getInvitedUsers?userId=${userId}`);
+        const checkInvited = async (userId: number) => {
+            const response = await fetch(`/api/checkInvitedUsers?userId=${userId}`);
             const data = await response.json();
-            if (data.invited_user && data.invited_user.status == 'accepted') {
-                setIsInvited(true);
+            if (data.status) {
+                setIsInvited(data.status);
+                localStorage.setItem('isInvited', data.status);
             };
         };
-        checkInvited();
-    }, [userId, username]);
+        if(userId) checkInvited(userId);
+
+        const checkBeingInvited = async (userId: number) => {
+            const response = await fetch(`/api/checkBeingInvited?userId=${userId}`);
+            const data = await response.json();
+            if(data.status) {
+                setIsBeingInvited(data.status);
+                localStorage.setItem('isBeingInvited', data.status);
+            }
+        }
+        if(userId) checkBeingInvited(userId);
+    }, [userId, username, isInvited, isBeingInvited]);
 
     useEffect(() => {
         const avatarUrl = localStorage.getItem('avatar_url');
@@ -69,6 +81,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
             if (response.ok) {
                 localStorage.removeItem('avatar_url');
                 localStorage.removeItem('username');
+                localStorage.removeItem('isInvited');
+                localStorage.removeItem('isBeingInvited');
                 if (onLogout) onLogout();
                 router.push('/');
             } else {
@@ -111,7 +125,18 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                             </Link>
                             {isInvited && (
                                 <ul className="lg:ml-6 w:3/4 flex-col">
-                                    <li className="mg:mt-2 lg:mb-1 lg:w-full">
+                                    <li className="lg:mt-2 lg:mb-1 lg:w-full">
+                                        <Link href='/subscriptions/personal'>
+                                            <span className={isActiveLink('/subscriptions/personal')}>
+                                                <p className="sm:hidden lg:block lg:text-sm">Личные</p>
+                                            </span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            )}
+                            {isBeingInvited && (
+                                <ul className="lg:ml-6 w:3/4 flex-col">
+                                    <li className="lg:mt-2 lg:mb-1 lg:w-full">
                                         <Link href='/subscriptions/personal'>
                                             <span className={isActiveLink('/subscriptions/personal')}>
                                                 <p className="sm:hidden lg:block lg:text-sm">Личные</p>

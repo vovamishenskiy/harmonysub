@@ -76,6 +76,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
                             placeholder='Адрес электронной почты'
                             value={formData.email}
                             onChange={handleChange}
+                            autoFocus
                             className={`block w-full p-2 border rounded-xl bg-transparent h-12 outline-none ${errors.email ? 'border-red-500' : ''}`}
                             aria-invalid={!!errors.email}
                             aria-describedby='email-error'

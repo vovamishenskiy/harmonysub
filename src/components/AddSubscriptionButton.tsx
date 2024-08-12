@@ -180,7 +180,7 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                     <CreditCardIcon className='min-w-5 min-h-5 sm:hidden lg:block' />
                                 </div>
                             </div>
-                            <div className="mb-4 flex flex-col items-center gap-4">
+                            <div className="mb-4 flex flex-col gap-4">
                                 <div className="flex gap-2 items-center">
                                     <span>Подписка остановлена?</span>
                                     <input

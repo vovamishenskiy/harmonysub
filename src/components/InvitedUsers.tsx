@@ -70,6 +70,7 @@ const InvitedUsers: React.FC = () => {
 
             if (response.ok) {
                 setInvitedUsers(invitedUsers.filter((invitedUser) => invitedUser.senderusername === storedUsername));
+                localStorage.removeItem('isInvited');
                 setMessage('Приглашение удалено');
             } else {
                 setError(data.error);

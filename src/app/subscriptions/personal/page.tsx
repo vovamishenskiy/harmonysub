@@ -1,4 +1,3 @@
-// pages/personal-subscriptions.tsx (или app/personal-subscriptions/page.tsx)
 'use client';
 
 import React, { useEffect, useState } from 'react';
