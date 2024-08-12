@@ -30,6 +30,7 @@ const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [invitedUser, setInvitedUser] = useState<IUser | null>(null);
+  const [isInvited, setIsInvited] = useState(false);
   const [error, setError] = useState('');
   const [userId, setUserId] = useState(null);
 
@@ -54,6 +55,7 @@ const Subscriptions: React.FC = () => {
       .then((data) => {
         if (!data.error) {
           setInvitedUser({ username: data.username, avatar_url: data.avatar_url });
+          setIsInvited(true);
         }
       })
       .catch((err) => {
@@ -82,7 +84,7 @@ const Subscriptions: React.FC = () => {
 
     const interval = setInterval(fetchSubscriptions, 5000);
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [userId, isInvited]);
 
   return (
     <div className='flex flex-row'>

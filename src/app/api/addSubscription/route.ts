@@ -12,19 +12,11 @@ export async function POST(req: NextRequest) {
             price,
             renewal_type,
             paid_from,
-            status
+            status,
+            personal
         } = await req.json();
 
-        console.log(user_id,
-            title,
-            start_date,
-            expiry_date,
-            price,
-            renewal_type,
-            paid_from,
-            status)
-
-        if (!user_id || !title || !start_date || !expiry_date || !price || !renewal_type || !paid_from) {
+        if (!user_id || !title || !start_date || !expiry_date || !price || !renewal_type || !paid_from || !personal) {
             return NextResponse.json({ error: 'Все поля обязательны' }, { status: 400 });
         }
 
@@ -39,7 +31,7 @@ export async function POST(req: NextRequest) {
         const invitedUserId = userSubIdResult.rows[0]?.user_sub_id || user_id;
 
         const result = await sql`
-            INSERT INTO subscriptions(user_id, title, start_date, expiry_date, price, renewal_type, paid_from, status)
+            INSERT INTO subscriptions(user_id, title, start_date, expiry_date, price, renewal_type, paid_from, status, personal)
             VALUES (
                 ${invitedUserId},
                 ${title},
@@ -48,7 +40,8 @@ export async function POST(req: NextRequest) {
                 ${price},
                 ${renewal_type},
                 ${paid_from},
-                ${status}
+                ${status},
+                ${personal}
             )
             RETURNING *;
         `;

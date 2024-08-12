@@ -15,6 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     const [username, setUsername] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [userPopoverOpen, setUserPopoverOpen] = useState(false);
+    const [isInvited, setIsInvited] = useState(false);
     const router = useRouter();
     const currentPath = usePathname();
 
@@ -24,6 +25,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
         setUserAvatar(avatarUrl);
         setUsername(username);
         setLoading(false);
+
+        const checkInvited = async () => {
+            const response = await fetch('/api/getInvitedUsers');
+            const data = await response.json();
+            if(data.invited_user && data.invited_user.status == 'accepted') {
+                setIsInvited(true);
+            };
+        };
+        checkInvited();
     }, []);
 
     const handleLogout = async () => {
@@ -78,6 +88,17 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                                     <p className="sm:hidden lg:block">Подписки</p>
                                 </span>
                             </Link>
+                            {isInvited && (
+                                <ul className="lg:ml-6 w:3/4 flex-col">
+                                    <li className="mg:mt-2 lg:mb-1 lg:w-full">
+                                        <Link href='/subscriptions/personal'>
+                                            <span className={isActiveLink('/subscriptions/personal')}>
+                                                <p className="sm:hidden lg:block lg:text-sm">Личные</p>
+                                            </span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            )}
                         </li>
                         <li className="lg:mb-6 lg:w-full">
                             <Link href='/user'>

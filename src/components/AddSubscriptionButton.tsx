@@ -22,6 +22,7 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
     const [renewalType, setRenewalType] = useState('1');
     const [paymentCard, setPaymentCard] = useState('')
     const [isStopped, setIsStopped] = useState(false);
+    const [isPersonal, setIsPersonal] = useState(false);
 
     const handleOpenClose = (e: any) => {
         e.stopPropagation();
@@ -69,6 +70,7 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
             renewal_type: renewalType,
             paid_from: paymentCard,
             status: isStopped,
+            personal: isPersonal,
         }
 
         fetch('/api/addSubscription', {
@@ -90,6 +92,7 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                     setRenewalType('1');
                     setPaymentCard('');
                     setIsStopped(false);
+                    setIsPersonal(false);
                     onUpdate();
                 }
             })
@@ -177,13 +180,21 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                     <CreditCardIcon className='min-w-5 min-h-5 sm:hidden lg:block' />
                                 </div>
                             </div>
-                            <div className="mb-4">
+                            <div className="mb-4 flex flex-col items-center gap-4">
                                 <div className="flex gap-2 items-center">
                                     <span>Подписка остановлена?</span>
                                     <input
                                         type="checkbox"
                                         checked={isStopped}
                                         onChange={(e) => setIsStopped(e.target.checked)}
+                                    />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <span title='Если подписка личная, то она не будет видна у приглашённого пользователя'>Личная подписка?</span>
+                                    <input
+                                        type="checkbox"
+                                        checked={isPersonal}
+                                        onChange={(e) => setIsPersonal(e.target.checked)}
                                     />
                                 </div>
                             </div>
