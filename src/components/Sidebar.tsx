@@ -16,20 +16,38 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     const [loading, setLoading] = useState(true);
     const [userPopoverOpen, setUserPopoverOpen] = useState(false);
     const [isInvited, setIsInvited] = useState(false);
+    const [error, setError] = useState('');
+    const [userId, setUserId] = useState(null);
     const router = useRouter();
     const currentPath = usePathname();
+
+    const getUserId = async (username: string) => {
+        try {
+            const response = await fetch(`/api/getUserData?username=${username}`);
+            const data = await response.json();
+            if (response.ok) {
+                setUserId(data.user_id);
+            } else {
+                setError(data.error || 'Ошибка при получении данных пользователя');
+            }
+        } catch (error) {
+            setError('Ошибка при получении данных пользователя');
+            console.error('Ошибка при получении данных пользователя: ', error);
+        }
+    }
 
     useEffect(() => {
         const avatarUrl = localStorage.getItem('avatar_url');
         const username = localStorage.getItem('username');
+        getUserId(String(username));
         setUserAvatar(avatarUrl);
         setUsername(username);
         setLoading(false);
 
         const checkInvited = async () => {
-            const response = await fetch('/api/getInvitedUsers');
+            const response = await fetch(`/api/getInvitedUsers?userId=${userId}`);
             const data = await response.json();
-            if(data.invited_user && data.invited_user.status == 'accepted') {
+            if (data.invited_user && data.invited_user.status == 'accepted') {
                 setIsInvited(true);
             };
         };
