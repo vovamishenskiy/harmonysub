@@ -5,9 +5,6 @@ import { PlayIcon, StopIcon } from "@heroicons/react/24/solid";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import React, { useState, useEffect } from "react";
-// @ts-ignore
-import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
 import EditSubscription from "@/components/EditSubscriptions";
 
 interface ISubscription {
@@ -125,7 +122,7 @@ const Subscription: React.FC<SubscriptionProps> = ({ subscription, onUpdate }) =
             <div className="lg:block sm:hidden">
                 <Card className="bg-slate-100 p-2 rounded-xl w-auto min-w-80 h-auto" data-id={subscription.subscription_id}>
                     <CardHeader className="flex flex-row items-center">
-                        <p className="text-2xl hover:text-emerald-700 cursor-pointer transition ease-in-out duration-250" onClick={handleEdit}>{subscription.title}</p>
+                        <p className="text-2xl hover:text-emerald-700 cursor-pointer transition ease-in-out duration-250" onClick={(e) => handleEdit(e)}>{subscription.title}</p>
                         {expiring && <span className="w-auto ml-auto py-1 px-2 rounded-full text-white bg-red-500 font-light text-sm">Истекает</span>}
                     </CardHeader>
                     <Divider className="my-2 " />

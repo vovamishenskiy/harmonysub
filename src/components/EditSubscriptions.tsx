@@ -69,8 +69,6 @@ const EditSubscription: React.FC<EditSubscriptionProps> = ({ subscription, onClo
                 } else if (data.success) {
                     handleClose(e);
                     onUpdate();
-                } else {
-                    alert(data.error || 'Не удалось обновить подписку');
                 }
             })
             .catch((err) => {

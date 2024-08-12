@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         await sql`
-            UPDATE subsrciption
+            UPDATE subscriptions
             SET is_locked = true, locked_by_user_id = ${userId}
             WHERE subscription_id = ${subscriptionId};
         `;
