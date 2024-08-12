@@ -37,12 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
     }
 
     useEffect(() => {
-        const avatarUrl = localStorage.getItem('avatar_url');
-        const username = localStorage.getItem('username');
         getUserId(String(username));
-        setUserAvatar(avatarUrl);
-        setUsername(username);
-        setLoading(false);
 
         const checkInvited = async () => {
             const response = await fetch(`/api/getInvitedUsers?userId=${userId}`);
@@ -52,6 +47,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
             };
         };
         checkInvited();
+    }, [userId, username]);
+
+    useEffect(() => {
+        const avatarUrl = localStorage.getItem('avatar_url');
+        const username = localStorage.getItem('username');
+        setUserAvatar(avatarUrl);
+        setUsername(username);
+        setLoading(false);
     }, []);
 
     const handleLogout = async () => {
