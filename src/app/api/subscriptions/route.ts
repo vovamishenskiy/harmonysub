@@ -40,11 +40,12 @@ export async function GET(req: NextRequest) {
                 SELECT s.*
                 FROM subscriptions s
                 WHERE s.user_id = ${userId}
+                OR s.user_id = ${userSubId}
                 UNION
                 SELECT ss.*
                 FROM subscriptions ss
                 INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
-                WHERE shs.user_id = ${userId};
+                WHERE shs.user_id = ${userSubId};
             `;
         } else {
             subscriptions = await sql`
