@@ -34,8 +34,8 @@ const Invitations: React.FC = () => {
             const data = await response.json();
 
             if (response.ok) {
+                setError('');
                 setInvitations(data.invitations);
-                console.log(data.invitations);
             } else {
                 setError(data.error);
             }
@@ -49,7 +49,6 @@ const Invitations: React.FC = () => {
         while (true) {
             await fetchInvitations(userId);
             await new Promise((resolve) => {
-                setError('');
                 setTimeout(resolve, 5000)
             });
         }
@@ -116,7 +115,7 @@ const Invitations: React.FC = () => {
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col w-2/3'>
             <h2 className='font-medium mb-2 mt-2'>Ваши приглашения</h2>
             {message && <p className='text-green-600 text-base'>{message}</p>}
             {error && <p className='text-red-500 text-base'>{error}</p>}

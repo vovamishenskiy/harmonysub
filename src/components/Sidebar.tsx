@@ -86,6 +86,24 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                                     <p className="sm:hidden lg:block">Пользователь</p>
                                 </span>
                             </Link>
+                            {(currentPath.startsWith('/user')) && (
+                                <ul className='lg:ml-6 w:3/4 flex-col'>
+                                    <li className="lg:mt-2 lg:mb-1 lg:w-full">
+                                        <Link href='/user/settings'>
+                                            <span className={isActiveLink('/user/settings')}>
+                                                <p className="sm:hidden:lg:block lg:text-sm">Настройки пользователя</p>
+                                            </span>
+                                        </Link>
+                                    </li>
+                                    <li className="lg:w-full">
+                                        <Link href='/user/invites'>
+                                            <span className={isActiveLink('/user/invites')}>
+                                                <p className="sm:hidden:lg:block lg:text-sm">Приглашения</p>
+                                            </span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            )}
                         </li>
                         <li className="lg:mb-6 lg:w-full">
                             <Link href='/settings'>
