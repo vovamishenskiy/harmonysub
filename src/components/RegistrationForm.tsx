@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { z } from 'zod';
 import { ZodError } from 'zod';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+
+const HCAPTCHA_TOKEN: any = process.env.NEXT_PUBLIC_HCAPTCHA_TOKEN;
 
 interface RegistrationFormProps {
     onRegisterSuccess?: () => void;
@@ -15,7 +18,7 @@ const RegistrationSchema = z.object({
     surname: z.string().min(1, { message: "Введите фамилию" }),
     username: z.string().min(1, { message: "Введите имя пользователя на английском языке" }),
     email: z.string().email({ message: 'Введите адрес электронной почты' }),
-    password: z.string().min(6, { message: 'Введите пароль длиной минимум 6 символов' }),
+    password: z.string().min(6, { message: 'Пароль должен содержать минимум 6 символов' }),
     confirmPassword: z.string().min(6, { message: 'Подтвердите пароль' }),
     country: z.string().min(1, { message: 'Выберите страну' }),
 }).refine(data => data.password === data.confirmPassword, {
@@ -35,11 +38,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isRegistered, setIsRegistered] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const handleCaptcha = (captchaToken: string) => {
+        setCaptchaToken(captchaToken);
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -60,6 +68,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
 
         try {
             schema.parse(formData);
+
+            if (!captchaToken) {
+                setErrors({ general: 'Пройдите проверку капчи' });
+                return;
+            }
 
             const response = await axios.post('/api/registration', formData);
 
@@ -92,17 +105,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
     };
 
     return (
-        <div className='w-full m-auto'>
+        <div className='w-full m-auto sm:h-full sm:flex sm:flex-col'>
             {isRegistered ? (
-                <div>
-                    <h2 className='text-4xl font-bold mb-6 text-emerald-700'>Вы успешно зарегистрировались!</h2>
+                <div className='sm:mt-[50%] lg:mt-0'>
+                    <h2 className='text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl'>Вы успешно зарегистрировались!</h2>
                     <button onClick={() => router.push('/login')} className='px-12 bg-emerald-700 hover:bg-emerald-600 transition ease-in-out text-white py-2 rounded-xl mt-4'>Вход</button>
                 </div>
             ) : (
-                <form onSubmit={handleSubmit} className='w-5/6 h-1/2 m-auto'>
-                    <h2 className="text-4xl font-bold mb-6 text-emerald-700">Регистрация</h2>
-
-                    <div className="flex flex-col gap max-w-full w-1/2 mx-auto">
+                <form onSubmit={handleSubmit} className='w-5/6 h-1/2 lg:h-2/3 lg:w-2/6 lg:m-auto sm:mt-3'>
+                    <h2 className="text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl">Регистрация</h2>
+                    <div className="flex flex-col gap max-w-full w-1/2 mx-auto sm:w-full">
                         <div className="flex flex-col gap w-auto">
                             <div className="mb-4">
                                 <input
@@ -438,11 +450,23 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                 {errors.name && <p id='confirmPassword-error' className='text-red-500'>{errors.confirmPassword}</p>}
                             </div>
                         </div>
+
+                        <div className="w-80 lg:flex flex-col items-center mx-auto sm:hidden">
+                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha}/>
+
+                            <button type='submit' disabled={!captchaToken} className='w-full mx-auto bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
+                                Зарегистрироваться
+                            </button>
+                        </div>
+                        <div className="sm:w-full hidden flex-col items-center mx-auto sm:flex lg:hidden">
+                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} size='compact'/>
+
+                            <button type='submit' disabled={!captchaToken} className='w-full mx-auto bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
+                                Зарегистрироваться
+                            </button>
+                        </div>
                     </div>
 
-                    <button type='submit' className='w-1/4 bg-emerald-700 hover:bg-emerald-600 transition ease-in-out text-white py-2 rounded-xl mt-4'>
-                        Зарегистрироваться
-                    </button>
                     {errors.general && <p className='text-red-500 pt-2'>{errors.general}</p>}
                 </form>
             )}

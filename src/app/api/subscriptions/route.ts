@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get('token')?.value;
 
     if (!token) {
-        NextResponse.redirect(new URL('/', req.url));
         return NextResponse.redirect(new URL('/', req.url));
     }
 
@@ -16,10 +15,35 @@ export async function GET(req: NextRequest) {
         const decoded = jwt.verify(token, JWT_SECRET as string) as { userId: string };
         const userId = decoded.userId;
 
-        const result = await sql`SELECT * FROM subscriptions WHERE user_id = ${userId}`;
-        const subscriptions = result.rows;
+        const userResult = await sql`
+            SELECT user_sub_id, user_add_id FROM users WHERE user_id = ${userId} LIMIT 1;
+        `;
+        const userSubId = userResult.rows[0]?.user_sub_id;
+        const userAddId = userResult.rows[0]?.user_add_id;
 
-        return NextResponse.json(subscriptions, { status: 200 });
+        let subscriptions;
+
+        if (userAddId) {
+            subscriptions = await sql`
+                SELECT s.*
+                FROM subscriptions s
+                WHERE s.user_id = ${userId}
+                OR s.user_id = ${userAddId}
+                UNION
+                SELECT ss.*
+                FROM subscriptions ss
+                INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
+                WHERE shs.user_id = ${userAddId} AND ss.personal = false;
+            `;
+        } else {
+            subscriptions = await sql`
+                SELECT s.*
+                FROM subscriptions s
+                WHERE s.user_id = ${userId} and s.personal = false;
+            `;
+        }
+
+        return NextResponse.json(subscriptions.rows, { status: 200 });
     } catch (error) {
         console.error('Ошибка при получении подписок', error);
         return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });

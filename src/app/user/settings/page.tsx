@@ -1,5 +1,3 @@
-import Invitations from "@/components/Invitations";
-import SearchUser from "@/components/SearchUser";
 import Sidebar from "@/components/Sidebar";
 
 const User = () => {
@@ -7,7 +5,7 @@ const User = () => {
         <div className="flex flex-row">
             <Sidebar />
             <main className="flex flex-col mt-3 ml-4 w-full">
-                <h1 className="text-3xl mb-5">Пользователь</h1>
+                <h1 className="text-3xl mb-3">Настройки пользователя</h1>
             </main>
         </div>
     );

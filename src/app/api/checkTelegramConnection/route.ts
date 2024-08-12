@@ -18,13 +18,10 @@ export async function GET(req: NextRequest) {
             SELECT telegram_chat_id FROM users WHERE user_id = ${userId}
         `;
 
-        if (result.rows.length > 0 && result.rows[0].telegram_chat_id) {
-            return NextResponse.json({ connected: true });
-        } else {
-            return NextResponse.json({ connected: false });
-        }
+        const telegramConnected = result.rows.length > 0 && result.rows[0].telegram_chat_id != null;
+        return NextResponse.json({ telegramConnected });
     } catch (error) {
         console.error('Ошибка проверки подключения Телеграм бота: ', error);
-        return NextResponse.json({ connected: false });
+        return NextResponse.json({ telegramConnected: false }, { status: 500 });
     }
 }
