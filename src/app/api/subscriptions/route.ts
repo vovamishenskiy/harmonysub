@@ -35,6 +35,17 @@ export async function GET(req: NextRequest) {
                 INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
                 WHERE shs.user_id = ${userAddId};
             `;
+        } else if (userSubId) {
+            subscriptions = await sql`
+                SELECT s.*
+                FROM subscriptions s
+                WHERE s.user_id = ${userId}
+                UNION
+                SELECT ss.*
+                FROM subscriptions ss
+                INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
+                WHERE shs.user_id = ${userId};
+            `;
         } else {
             subscriptions = await sql`
                 SELECT s.*
