@@ -20,20 +20,29 @@ export async function GET(req: NextRequest) {
         `;
         const userSubId = userSubIdResult.rows[0]?.user_sub_id || userId;
 
-        const result = await sql`
-            SELECT s.*
-            FROM subscriptions s
-            WHERE s.user_id = ${userId}
-            OR s.user_id = ${userSubId}
-            UNION
-            SELECT ss.*
-            FROM subscriptions ss
-            INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
-            WHERE shs.user_id = ${userSubId};
-        `;
-        const subscriptions = result.rows;
+        let subscriptions;
 
-        return NextResponse.json(subscriptions, { status: 200 });
+        if (userSubId) {
+            subscriptions = await sql`
+                SELECT s.*
+                FROM subscriptions s
+                WHERE s.user_id = ${userId}
+                OR s.user_id = ${userSubId}
+                UNION
+                SELECT ss.*
+                FROM subscriptions ss
+                INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
+                WHERE shs.user_id = ${userSubId};
+            `;
+        } else {
+            subscriptions = await sql`
+                SELECT s.*
+                FROM subscriotions s
+                WHERE s.user_id = ${userId};
+            `;
+        }
+
+        return NextResponse.json(subscriptions.rows, { status: 200 });
     } catch (error) {
         console.error('Ошибка при получении подписок', error);
         return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });
