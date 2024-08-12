@@ -15,29 +15,30 @@ export async function GET(req: NextRequest) {
         const decoded = jwt.verify(token, JWT_SECRET as string) as { userId: string };
         const userId = decoded.userId;
 
-        const userSubIdResult = await sql`
-            SELECT user_sub_id FROM users WHERE user_id = ${userId} LIMIT 1;
+        const userResult = await sql`
+            SELECT user_sub_id, user_add_id FROM users WHERE user_id = ${userId} LIMIT 1;
         `;
-        const userSubId = userSubIdResult.rows[0]?.user_sub_id || userId;
+        const userSubId = userResult.rows[0]?.user_sub_id;
+        const userAddId = userResult.rows[0]?.user_add_id;
 
         let subscriptions;
 
-        if (userSubId) {
+        if (userAddId) {
             subscriptions = await sql`
                 SELECT s.*
                 FROM subscriptions s
                 WHERE s.user_id = ${userId}
-                OR s.user_id = ${userSubId}
+                OR s.user_id = ${userAddId}
                 UNION
                 SELECT ss.*
                 FROM subscriptions ss
                 INNER JOIN shared_subscriptions shs ON ss.subscription_id = shs.subscription_id
-                WHERE shs.user_id = ${userSubId};
+                WHERE shs.user_id = ${userAddId};
             `;
         } else {
             subscriptions = await sql`
                 SELECT s.*
-                FROM subscriotions s
+                FROM subscriptions s
                 WHERE s.user_id = ${userId};
             `;
         }

@@ -28,6 +28,10 @@ export async function POST(req: NextRequest) {
             UPDATE users SET user_sub_id = ${invite.recipient_id} WHERE user_id = ${invite.sender_id};
         `;
 
+        await sql`
+            UPDATE users SET user_add_id = ${invite.sender_id} WHERE user_id = ${invite.recipient_id};
+        `;
+
         return NextResponse.json({ message: 'Приглашение принято' }, { status: 200 });
     } catch (error) {
         console.error('Ошибка при принятии приглашения: ', error);
