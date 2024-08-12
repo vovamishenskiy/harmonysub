@@ -24,7 +24,13 @@ export async function POST(req: NextRequest) {
 
         await sql`
             DELETE FROM invitations WHERE sender_id = ${userId};
+        `;
+
+        await sql`
             DELETE FROM shared_subscriptions WHERE user_id = ${userSubId};
+        `;
+
+        await sql`
             UPDATE users SET user_sub_id = null WHERE user_id = ${userId};
         `;
 
