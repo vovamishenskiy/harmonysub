@@ -1,5 +1,10 @@
 import LandingSidebar from "@/components/LandingSidebar";
 import RegistrationForm from "@/components/RegistrationForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Регистрация | Harmonysub',
+};
 
 const Register = () => {
     return (

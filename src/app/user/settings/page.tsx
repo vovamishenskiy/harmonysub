@@ -1,5 +1,9 @@
 import Sidebar from "@/components/Sidebar";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+    title: 'Настройки пользователя | Harmonysub',
+};
 const User = () => {
     return (
         <div className="flex flex-row">

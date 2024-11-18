@@ -1,7 +1,11 @@
 import Invitations from "@/components/Invitations";
 import SearchUser from "@/components/SearchUser";
 import Sidebar from "@/components/Sidebar";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+    title: 'Пользователь | Harmonysub',
+};
 const User = () => {
     return (
         <div className="flex flex-row">

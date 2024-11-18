@@ -1,6 +1,11 @@
 import Sidebar from "@/components/Sidebar";
 import ConnectTelegramButton from '@/components/ConnectTelegramButton';
 import UserSettings from "@/components/UserSettings";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Настройки | Harmonysub',
+};
 
 const Settings = () => {
     return (

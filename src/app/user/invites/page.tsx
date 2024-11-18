@@ -2,6 +2,11 @@ import Invitations from "@/components/Invitations";
 import InvitedUsers from "@/components/InvitedUsers";
 import SearchUser from "@/components/SearchUser";
 import Sidebar from "@/components/Sidebar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Приглашения | Harmonysub',
+};
 
 const User = () => {
     return (

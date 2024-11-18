@@ -1,5 +1,11 @@
 import LandingSidebar from '@/components/LandingSidebar';
 import Link from 'next/link';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Главная | Harmonysub',
+};
+
 
 export default function Home() {
   return (

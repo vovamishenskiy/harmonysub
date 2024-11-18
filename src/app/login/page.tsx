@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import LandingSidebar from "@/components/LandingSidebar";
 import LoginForm from '@/components/LoginForm';
+
+export const metadata: Metadata = {
+    title: 'Вход | Harmonysub',
+};
 
 const Login = () => {
     return (

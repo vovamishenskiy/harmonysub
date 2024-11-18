@@ -6,6 +6,11 @@ import SubscriptionSkeleton from '@/components/SubscriptionSkeleton';
 import Sidebar from '@/components/Sidebar';
 import AddSubscriptionButton from '@/components/AddSubscriptionButton';
 import Image from 'next/image';
+// import { Metadata } from "next";
+
+// export const metadata: Metadata = {
+//     title: 'Подписки | Harmonysub',
+// };
 
 interface ISubscription {
   subscription_id: number;
