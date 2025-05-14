@@ -6,6 +6,7 @@ import axios from 'axios';
 import { z } from 'zod';
 import { ZodError } from 'zod';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Link } from '@nextui-org/react';
 
 const HCAPTCHA_TOKEN: any = process.env.NEXT_PUBLIC_HCAPTCHA_TOKEN;
 
@@ -113,7 +114,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                 </div>
             ) : (
                 <form onSubmit={handleSubmit} className='w-5/6 h-1/2 lg:h-2/3 lg:w-2/6 lg:m-auto sm:mt-3'>
-                    <h2 className="text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl">Регистрация</h2>
+                    <h2 className="text-4xl font-bold mb-2 text-emerald-700 sm:text-2xl">Регистрация</h2>
+                    <p className='ml-auto mr-auto mb-6 text-base'>
+                        или <Link href='/login' className='text-emerald-900 hover:text-emerald-700 transition ease-in-out'>вход по сервисам</Link>
+                    </p>
                     <div className="flex flex-col gap max-w-full w-1/2 mx-auto sm:w-full">
                         <div className="flex flex-col gap w-auto">
                             <div className="mb-4">
@@ -155,7 +159,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-describedby="country-error"
                                 >
                                     <option value="">Выберите страну</option>
-                                    <option value="AF">Афганистан</option>
+                                    <option value="RU">Россия</option>
+                                    <option value="BY">Беларусь</option>
                                     <option value="AL">Албания</option>
                                     <option value="DZ">Алжир</option>
                                     <option value="AS">Американское Самоа</option>
@@ -174,7 +179,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     <option value="BH">Бахрейн</option>
                                     <option value="BD">Бангладеш</option>
                                     <option value="BB">Барбадос</option>
-                                    <option value="BY">Беларусь</option>
                                     <option value="BE">Бельгия</option>
                                     <option value="BZ">Белиз</option>
                                     <option value="BJ">Бенин</option>
@@ -327,7 +331,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     <option value="QA">Катар</option>
                                     <option value="RE">Реюньон</option>
                                     <option value="RO">Румыния</option>
-                                    <option value="RU">Россия</option>
                                     <option value="RW">Руанда</option>
                                     <option value="SH">Остров Святой Елены</option>
                                     <option value="KN">Сент-Китс и Невис</option>
@@ -453,14 +456,14 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                         </div>
 
                         <div className="w-80 lg:flex flex-col items-center mx-auto sm:hidden">
-                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha}/>
+                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} />
 
                             <button type='submit' disabled={!captchaToken} className='w-full mx-auto bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
                                 Зарегистрироваться
                             </button>
                         </div>
                         <div className="sm:w-full hidden flex-col items-center mx-auto sm:flex lg:hidden">
-                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} size='compact'/>
+                            <HCaptcha sitekey={HCAPTCHA_TOKEN} onVerify={handleCaptcha} size='compact' />
 
                             <button type='submit' disabled={!captchaToken} className='w-full mx-auto bg-emerald-700 hover:bg-emerald-600 disabled:bg-gray-300 transition ease-in-out text-white py-2 rounded-xl mt-4'>
                                 Зарегистрироваться

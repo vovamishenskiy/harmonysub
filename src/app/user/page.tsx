@@ -12,6 +12,8 @@ const User = () => {
             <Sidebar />
             <main className="flex flex-col mt-3 ml-4 w-full">
                 <h1 className="text-3xl mb-5">Пользователь</h1>
+
+                <h2>Тут будет статистика</h2>
             </main>
         </div>
     );

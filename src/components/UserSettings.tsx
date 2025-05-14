@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {PencilIcon, CheckIcon, XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, CheckIcon, XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { z, ZodError } from 'zod';
 
 const countries = [
+    { name: "Россия", code: "RU" }, { name: "Беларусь", code: "BY" },
     { name: "Австралия", code: "AU" }, { name: "Австрия", code: "AT" }, { name: "Азербайджан", code: "AZ" },
     { name: "Албания", code: "AL" }, { name: "Алжир", code: "DZ" }, { name: "Ангола", code: "AO" },
     { name: "Андорра", code: "AD" }, { name: "Антигуа и Барбуда", code: "AG" }, { name: "Аргентина", code: "AR" },
     { name: "Армения", code: "AM" }, { name: "Афганистан", code: "AF" }, { name: "Багамы", code: "BS" },
     { name: "Бангладеш", code: "BD" }, { name: "Барбадос", code: "BB" }, { name: "Бахрейн", code: "BH" },
-    { name: "Белиз", code: "BZ" }, { name: "Белоруссия", code: "BY" }, { name: "Бельгия", code: "BE" },
+    { name: "Белиз", code: "BZ" }, { name: "Бельгия", code: "BE" },
     { name: "Бенин", code: "BJ" }, { name: "Болгария", code: "BG" }, { name: "Боливия", code: "BO" },
     { name: "Босния и Герцеговина", code: "BA" }, { name: "Ботсвана", code: "BW" }, { name: "Бразилия", code: "BR" },
     { name: "Бруней", code: "BN" }, { name: "Буркина-Фасо", code: "BF" }, { name: "Бурунди", code: "BI" },
@@ -47,7 +48,7 @@ const countries = [
     { name: "Пакистан", code: "PK" }, { name: "Палау", code: "PW" }, { name: "Панама", code: "PA" },
     { name: "Папуа - Новая Гвинея", code: "PG" }, { name: "Парагвай", code: "PY" }, { name: "Перу", code: "PE" },
     { name: "Польша", code: "PL" }, { name: "Португалия", code: "PT" }, { name: "Республика Корея", code: "KR" },
-    { name: "Руанда", code: "RW" }, { name: "Румыния", code: "RO" }, { name: "Россия", code: "RU" },
+    { name: "Руанда", code: "RW" }, { name: "Румыния", code: "RO" },
     { name: "Сальвадор", code: "SV" }, { name: "Сан-Марино", code: "SM" }, { name: "Саудовская Аравия", code: "SA" },
     { name: "Сейшельские Острова", code: "SC" }, { name: "Сенегал", code: "SN" }, { name: "Сент-Люсия", code: "LC" },
     { name: "Сент-Китс и Невис", code: "KN" }, { name: "Сент-Винсент и Гренадины", code: "VC" },
@@ -207,7 +208,6 @@ const UserSettings: React.FC = () => {
     if (loading) {
         return (
             <div className="flex flex-col">
-                <p className="text-xl mb-3">Настройки пользователя</p>
                 <div className="flex flex-col pl-2 gap-2">
                     <Skeleton />
                     <Skeleton />
@@ -219,7 +219,6 @@ const UserSettings: React.FC = () => {
     }
     return (
         <div className="flex flex-col">
-            <p className="text-xl mb-3">Настройки пользователя</p>
             <div className="flex flex-col pl-2 gap-2">
                 <div className="flex flex-row gap-2 items-center">
                     {editField === 'username' ? (
