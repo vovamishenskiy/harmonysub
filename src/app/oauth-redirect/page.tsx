@@ -1,7 +1,9 @@
 'use client';
+export const dynamic = 'force-dynamic';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Loading from './loading';
 
 export default function OAuthRedirectPage() {
     const router = useRouter();
@@ -26,5 +28,9 @@ export default function OAuthRedirectPage() {
             });
     }, [router, to]);
 
-    return null; // пусто, сразу редиректим
+    return (
+        <Suspense fallback={<Loading />}>
+            {null}
+        </Suspense>
+    )
 }
