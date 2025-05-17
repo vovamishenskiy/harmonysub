@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import md5 from 'md5';
-import { sendMail } from "@/lib/mailer";
 
 export async function POST(req: NextRequest) {
     try {
@@ -21,14 +20,37 @@ export async function POST(req: NextRequest) {
 
         const user = result.rows[0];
 
-        await sendMail(
-            email,
-            'Добро пожаловать в Harmonysub!',
-            `<h1>Привет, ${name}!</h1>
-             <p>Вы успешно зарегистрировались.</p>
-             <p>Имя пользователя: <strong>${username}</strong></p>
-             <p>e-mail (для входа по e-mail): <strong>${email}</strong></p>`
-        );
+        // const apiKey = process.env.UNISENDER_API_KEY!
+        // const fromEmail = process.env.EMAIL_FROM_ADDRESS!
+        // const fromName = process.env.EMAIL_FROM_NAME!
+
+        // const params = new URLSearchParams({
+        //     api_key: apiKey,
+        //     from: fromEmail,
+        //     from_name: fromName,
+        //     'to[]': `${email}`,
+        //     subject: 'Добро пожаловать в HarmonySub!',
+        //     body: `<h1>Привет, ${name}!</h1>
+        //          <p>Вы успешно зарегистрировались.</p>
+        //          <p>Имя пользователя: <strong>${username}</strong></p>
+        //          <p>e-mail (для входа по e-mail): <strong>${email}</strong></p>
+        //         `,
+        //     lang: 'ru',
+        //     format: 'json',
+        // })
+
+        // try {
+        //     await sendMail(
+        //         email,
+        //         'Добро пожаловать в Harmonysub!',
+        //         `<h1>Привет, ${name}!</h1>
+        //          <p>Вы успешно зарегистрировались.</p>
+        //          <p>Имя пользователя: <strong>${username}</strong></p>
+        //          <p>e-mail (для входа по e-mail): <strong>${email}</strong></p>`
+        //     );
+        // } catch (mailErr) {
+        //     console.error('Ошибка при отправке письма: ', mailErr);
+        // }
 
         return NextResponse.json({ user });
     } catch (error) {

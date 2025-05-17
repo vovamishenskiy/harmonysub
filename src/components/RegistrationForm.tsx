@@ -78,6 +78,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
             const response = await axios.post('/api/registration', formData);
 
             if (response.status === 200) {
+                try {
+                    await axios.post('/api/sendRegistrationEmail', {
+                        email: formData.email,
+                        name: formData.name,
+                        username: formData.username,
+                    })
+                } catch (err) {
+                    console.error('Не удалось отправить приветственное письмо:', err)
+                }
+                
                 setFormData({
                     name: '',
                     surname: '',
@@ -108,7 +118,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
     return (
         <div className='w-full m-auto sm:h-full sm:flex sm:flex-col'>
             {isRegistered ? (
-                <div className='sm:mt-[50%] lg:mt-0'>
+                <div className='sm:mt-[50%] lg:mt-32'>
                     <h2 className='text-4xl font-bold mb-6 text-emerald-700 sm:text-2xl'>Вы успешно зарегистрировались!</h2>
                     <button onClick={() => router.push('/login')} className='px-12 bg-emerald-700 hover:bg-emerald-600 transition ease-in-out text-white py-2 rounded-xl mt-4'>Вход</button>
                 </div>
