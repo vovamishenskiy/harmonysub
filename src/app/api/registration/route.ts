@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import md5 from 'md5';
+import { sendMail } from "@/lib/mailer";
 
 export async function POST(req: NextRequest) {
     try {
@@ -19,6 +20,16 @@ export async function POST(req: NextRequest) {
         `;
 
         const user = result.rows[0];
+
+        await sendMail(
+            email,
+            'Добро пожаловать в Harmonysub!',
+            `<h1>Привет, ${name}!</h1>
+             <p>Вы успешно зарегистрировались.</p>
+             <p>Имя пользователя: <strong>${username}</strong></p>
+             <p>e-mail (для входа по e-mail): <strong>${email}</strong></p>`
+        );
+
         return NextResponse.json({ user });
     } catch (error) {
         console.error('Ошибка при регистрации пользователя: ', error);

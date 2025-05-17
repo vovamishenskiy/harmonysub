@@ -3,8 +3,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserCircleIcon, CogIcon, ArrowLeftEndOnRectangleIcon, QueueListIcon } from '@heroicons/react/16/solid';
-import { usePathname, useRouter } from 'next/navigation';
+import { UserCircleIcon, CogIcon, ArrowLeftEndOnRectangleIcon, QueueListIcon, ChartBarIcon, UserPlusIcon } from '@heroicons/react/16/solid';
+import { usePathname } from 'next/navigation';
 
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useInvitationStatus } from '@/hooks/useInvitationStatus';
@@ -37,10 +37,33 @@ const Sidebar: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => {
 
     // Мемоизированные элементы меню
     const menuItems = useMemo(() => [
-        { href: '/subscriptions', icon: <QueueListIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />, label: 'Подписки', submenu: isInvited || isBeingInvited ? [{ href: '/subscriptions/personal', label: 'Личные' }] : [] },
-        { href: '/user', icon: <UserCircleIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />, label: 'Пользователь', submenu: pathname.startsWith('/user') ? [{ href: '/user/settings', label: 'Настройки' }, { href: '/user/invites', label: 'Приглашения' }] : [] },
-        { href: '/settings', icon: <CogIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />, label: 'Настройки', submenu: [] }
-    ], [isInvited, isBeingInvited, pathname]);
+        {
+            href: '/subscriptions',
+            icon: <QueueListIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />,
+            label: 'Подписки',
+            submenu: isInvited || isBeingInvited
+                ? [{ href: '/subscriptions/personal', label: 'Личные' }]
+                : []
+        },
+        {
+            href: '/user',
+            icon: <ChartBarIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />,
+            label: 'Статистика',
+            submenu: []
+        },
+        {
+            href: '/user/invites',
+            icon: <UserPlusIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />,
+            label: 'Приглашения',
+            submenu: []
+        },
+        {
+            href: '/settings',
+            icon: <CogIcon className='h-6 w-6 lg:mr-3 sm:mr-0' />,
+            label: 'Настройки',
+            submenu: []
+        }
+    ], [isInvited, isBeingInvited]);
 
     return (
         <div className="relative">

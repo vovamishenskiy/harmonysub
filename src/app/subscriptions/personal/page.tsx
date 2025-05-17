@@ -45,28 +45,7 @@ const PersonalSubscriptions: React.FC = () => {
             <Sidebar />
 
             <main className="flex flex-col lg:mt-3 lg:ml-4 sm:ml-3 w-full">
-                {/* Заголовок с приглашённым */}
-                {isInvited ? (
-                    <h1 className="text-3xl mb-5 flex items-center gap-2">
-                        Личные подписки
-                        {invitedUser && (
-                            <div className="flex items-center gap-1">
-                                <span className="text-xl font-normal">+</span>
-                                <Image
-                                    src={invitedUser.avatar_url}
-                                    alt={`Приглашённый ${invitedUser.username}`}
-                                    title={`Приглашённый ${invitedUser.username}`}
-                                    width={24}
-                                    height={24}
-                                    className="rounded-full"
-                                    priority
-                                />
-                            </div>
-                        )}
-                    </h1>
-                ) : (
-                    <h1 className="text-3xl mb-5">Личные подписки</h1>
-                )}
+                <h1 className="text-3xl mb-5">Личные подписки</h1>
 
                 {/* Ошибки */}
                 {error && (

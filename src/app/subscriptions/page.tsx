@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import Image from 'next/image';
 
 import Sidebar from '@/components/Sidebar';
@@ -18,15 +18,45 @@ export interface IUser {
   avatar_url: string;
 }
 
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+const EXPIRING_WINDOW = 3 * MS_PER_DAY;
+
 const Subscriptions: React.FC = () => {
   const userId = useUserId();
   const isInvited = useInvitationFlag();
   const invitedUser = useInvitedUser(userId);
   const { subscriptions, loading, error, refetch } = useSubscriptions();
+  const [showActive, setShowActive] = useState(false);
+  const [showCancelled, setShowCancelled] = useState(false);
+  const [showExpiring, setShowExpiring] = useState(false);
+  const [showExpired, setShowExpired] = useState(false);
 
   const handleUpdate = useCallback(() => {
     refetch();
   }, [refetch]);
+
+  const filteredSubs = useMemo(() => {
+    if (!showExpiring && !showCancelled && !showExpired && !showActive) {
+      return subscriptions;
+    }
+
+    const now = Date.now();
+
+    return subscriptions.filter(sub => {
+      const expiryTime = new Date(sub.expiry_date).getTime();
+      const delta = expiryTime - now;
+
+      const isCancelled = sub.status === true;
+      const isExpiring = !isCancelled && delta >= 0 && delta <= EXPIRING_WINDOW;
+      const isExpired = !isCancelled && delta < 0;
+      const isActive = sub.status === false && !isExpiring && delta > 3;
+
+      return (showActive && isActive)
+        || (showExpiring && isExpiring)
+        || (showCancelled && isCancelled)
+        || (showExpired && isExpired);
+    });
+  }, [subscriptions, showActive, showExpiring, showCancelled, showExpired]);
 
   const skeletons = useMemo(() => {
     const count = subscriptions.length || 1;
@@ -36,7 +66,7 @@ const Subscriptions: React.FC = () => {
   }, [subscriptions.length]);
 
   const cards = useMemo(() => {
-    return subscriptions.map(sub => {
+    return filteredSubs.map(sub => {
       return (
         <Subscription
           key={sub.subscription_id}
@@ -45,7 +75,7 @@ const Subscriptions: React.FC = () => {
         />
       );
     });
-  }, [subscriptions, handleUpdate]);
+  }, [filteredSubs, handleUpdate]);
 
   return (
     <div className='flex flex-row'>
@@ -72,6 +102,41 @@ const Subscriptions: React.FC = () => {
           <h1 className="text-3xl mb-5 pt-4">Подписки</h1>
         )}
 
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => setShowActive(prev => !prev)}
+            className={`px-3 py-1 rounded-xl min-h-9 min-w-[125px] transition-all hover:text-emerald-900 ${showActive
+              ? 'border-2 border-emerald-700 text-white bg-emerald-700 hover:text-white'
+              : 'border-2 border-emerald-700 text-gray-800 bg-transparent'}`}
+          >
+            Активные
+          </button>
+          <button
+            onClick={() => setShowExpiring(prev => !prev)}
+            className={`px-3 py-1 rounded-xl min-h-9 min-w-[125px] transition-all hover:text-emerald-900 ${showExpiring
+              ? 'border-2 border-emerald-700 text-white bg-emerald-700 hover:text-white'
+              : 'border-2 border-emerald-700 text-gray-800 bg-transparent'}`}
+          >
+            Истекающие
+          </button>
+          <button
+            onClick={() => setShowExpired(prev => !prev)}
+            className={`px-3 py-1 rounded-xl min-h-9 min-w-[125px] transition-all hover:text-emerald-900 ${showExpired
+              ? 'border-2 border-emerald-700 text-white bg-emerald-700 hover:text-white'
+              : 'border-2 border-emerald-700 text-gray-800 bg-transparent'}`}
+          >
+            Истёкшие
+          </button>
+          <button
+            onClick={() => setShowCancelled(prev => !prev)}
+            className={`px-3 py-1 rounded-xl min-h-9 min-w-[125px] transition-all hover:text-emerald-900 ${showCancelled
+              ? 'border-2 border-emerald-700 text-white bg-emerald-700 hover:text-white'
+              : 'border-2 border-emerald-700 text-gray-800 bg-transparent'}`}
+          >
+            Отменённые
+          </button>
+        </div>
+
         {error &&
           <div className="text-red-500 mb-4">
             {error}
@@ -81,7 +146,7 @@ const Subscriptions: React.FC = () => {
         {loading ? (
           <div className="space y-4">{skeletons}</div>
         ) : (
-          <div className="flex flex-row flex-wrap lg:items-start lg:justify-normal lg:gap-4 h-auto sm:items-center sm:gap-3 sm:justify-between">
+          <div className="flex flex-row flex-wrap lg:items-start lg:justify-normal lg:gap-4 lg:mr-4 h-auto sm:items-center sm:gap-3 sm:justify-between">
             {subscriptions.length > 0 ? <>{cards}</> : (
               <p>
                 У Вас ещё нет подписок, добавьте первую с помощью кнопки в правом

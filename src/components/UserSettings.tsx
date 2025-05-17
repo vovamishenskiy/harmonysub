@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { PencilIcon, CheckIcon, XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { z, ZodError } from 'zod';
 
@@ -74,7 +75,7 @@ const Skeleton: React.FC = () => (
 );
 
 const UserSettings: React.FC = () => {
-    const [username, setUsername] = useState<string | null>(null);
+    const { username, setUsername } = useCurrentUser();
     const [email, setEmail] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
     const [country, setCountry] = useState<string | null>(null);
@@ -185,7 +186,7 @@ const UserSettings: React.FC = () => {
 
             if (data.message) {
                 if (newUsername) {
-                    localStorage.setItem('username', newUsername);
+                    // localStorage.setItem('username', newUsername);
                     setUsername(newUsername);
                 }
 

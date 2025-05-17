@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PlusIcon, XMarkIcon, CalendarDateRangeIcon, CreditCardIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { services, ServiceList } from '@/lib/services';
 // @ts-ignore
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,83 +12,100 @@ interface AddSubscriptionButtonProps {
     onUpdate: () => void;
 }
 
+interface Service {
+    name: string;
+    logoUrl: string;
+}
+
 const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate }) => {
     const [open, setOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // форма
+    const [subscriptionName, setSubscriptionName] = useState('');
+    const [selectedService, setSelectedService] = useState<Service | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [price, setPrice] = useState('');
+    const [renewalType, setRenewalType] = useState('1');
+    const [paymentCard, setPaymentCard] = useState('');
+    const [isStopped, setIsStopped] = useState(false);
+    const [isPersonal, setIsPersonal] = useState(false);
+
     const [username, setUsername] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const [subscriptionName, setSubscriptionName] = useState('');
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [price, setPrice] = useState('');
-    const [renewalType, setRenewalType] = useState('1');
-    const [paymentCard, setPaymentCard] = useState('')
-    const [isStopped, setIsStopped] = useState(false);
-    const [isPersonal, setIsPersonal] = useState(false);
-
-    const handleOpenClose = (e: any) => {
-        e.stopPropagation();
-        setOpen(!open);
-    }
-
+    // закрытие дропдауна по клику вне
     useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-            fetch(`/api/getUserData?username=${storedUsername}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.user_id) {
-                        setUserId(data.user_id);
-                    }
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.error('Ошибка при загрузке данных пользователя: ', err);
-                    setLoading(false);
-                });
+        function handleClickOutside(e: MouseEvent) {
+            if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+                setDropdownOpen(false);
+            }
         }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleSubmit = (e: any) => {
+    // получаем userId
+    useEffect(() => {
+        const stored = localStorage.getItem('username');
+        if (!stored) { setLoading(false); return; }
+        setUsername(stored);
+        fetch(`/api/getUserData?username=${stored}`)
+            .then(r => r.json())
+            .then(d => setUserId(d.user_id))
+            .catch(console.error)
+            .finally(() => setLoading(false));
+    }, []);
+
+    const handleOpenClose = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpen(o => !o);
+    };
+
+    const handleSelectService = (svc: Service) => {
+        setSelectedService(svc);
+        setSubscriptionName(svc.name);
+        setDropdownOpen(false);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!userId || !startDate) return;
 
-        const formatDate = (date: Date) => {
-            const offset = date.getTimezoneOffset();
-            const adjustedDate = new Date(date.getTime() - offset * 60 * 1000);
-            return adjustedDate.toISOString().split('T')[0];
-        }
+        const formatDate = (d: Date) => {
+            const offset = d.getTimezoneOffset();
+            return new Date(d.getTime() - offset * 60000).toISOString().split('T')[0];
+        };
 
-        const expiryDate = new Date(startDate);
-        expiryDate.setDate(expiryDate.getDate() + parseInt(renewalType, 10));
+        const expiry = new Date(startDate);
+        expiry.setDate(expiry.getDate() + parseInt(renewalType, 10));
 
-        const newSubscription = {
+        const payload = {
             user_id: userId,
             title: subscriptionName,
             start_date: formatDate(startDate),
-            expiry_date: formatDate(expiryDate),
+            expiry_date: formatDate(expiry),
             price,
             renewal_type: renewalType,
             paid_from: paymentCard,
             status: isStopped,
             personal: isPersonal,
-        }
+            logo_url: selectedService?.logoUrl || ''  // передаём URL логотипа
+        };
 
         fetch('/api/addSubscription', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newSubscription),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
         })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.error) {
-                    console.log('Ошибка при добавлении подписки: ', data.error);
-                } else {
+            .then(r => r.json())
+            .then(data => {
+                if (!data.error) {
                     setOpen(false);
                     setSubscriptionName('');
+                    setSelectedService(null);
                     setStartDate(null);
                     setPrice('');
                     setRenewalType('1');
@@ -94,65 +113,107 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                     setIsStopped(false);
                     setIsPersonal(false);
                     onUpdate();
-                }
+                } else console.error(data.error);
             })
-            .catch((err) => {
-                console.error('Ошибка при добавлении подписки: ', err);
-            })
-    }
+            .catch(console.error);
+    };
 
     return (
         <>
             {open ? (
-                <div className='w-full h-full z-[212] sm:px-3 lg:px-0 opacity-100 bg-gray-800/75 flex items-center justify-center absolute top-0 left-0 cursor-pointer' onClick={handleOpenClose}>
-                    <div className="lg:w-1/3 sm:w-full h-auto rounded-xl p-4 bg-white opacity-100 cursor-default z-10" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex flex-row items-baseline justify-between">
-                            <p className="text-lg mb-4">Добавить подписку</p>
-                            <button onClick={handleOpenClose} className="btn"><XMarkIcon className='w-6 h-6' /></button>
+                <div
+                    className="fixed inset-0 z-20 bg-gray-800/75 flex items-center justify-center"
+                    onClick={handleOpenClose}
+                >
+                    <div
+                        className="bg-white rounded-xl p-4 w-full max-w-lg"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg font-medium">Добавить подписку</h2>
+                            <button onClick={handleOpenClose}><XMarkIcon className="w-6 h-6" /></button>
                         </div>
                         <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Название подписки</label>
+                            {/* Название + дропдаун */}
+                            <div className="relative mb-4" ref={wrapperRef}>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Название подписки
+                                </label>
                                 <input
                                     type="text"
                                     className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
                                     value={subscriptionName}
-                                    onChange={(e) => setSubscriptionName(e.target.value)}
+                                    onChange={e => {
+                                        setSubscriptionName(e.target.value);
+                                        setSelectedService(null);
+                                        setDropdownOpen(true);
+                                    }}
+                                    onFocus={() => setDropdownOpen(true)}
                                     required
                                 />
+                                {dropdownOpen && (
+                                    <ul className="absolute z-10 mt-1 w-full max-h-60 overflow-auto bg-white border rounded-xl shadow-lg">
+                                        {services
+                                            .filter(s => s.name.toLowerCase().includes(subscriptionName.toLowerCase()))
+                                            .map((service: ServiceList) => (
+                                                <li
+                                                    key={service.name}
+                                                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                    onClick={() => {
+                                                        setSubscriptionName(service.name);
+                                                        setDropdownOpen(false);
+                                                    }}
+                                                >
+                                                    <Image src={service.logoUrl} width={24} height={24} alt={service.name} />
+                                                    <span>{service.name}</span>
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                )}
                             </div>
+
+                            {/* Остальные поля */}
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Дата начала подписки</label>
-                                <div className="flex flex-row items-center gap-1 flex-shrink-0">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Дата начала подписки
+                                </label>
+                                <div className="flex items-center gap-2">
                                     <DatePicker
                                         selected={startDate}
-                                        onChange={(date: any) => setStartDate(date)}
-                                        className="block lg:w-[589px] sm:w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                        onChange={d => setStartDate(d)}
+                                        className="w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
                                         dateFormat="dd/MM/yyyy"
                                         required
                                     />
-                                    <CalendarDateRangeIcon className='min-w-5 min-h-5 sm:minx-w-5 sm:max-w-5' />
+                                    <CalendarDateRangeIcon className="w-5 h-5 text-gray-500" />
                                 </div>
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Цена</label>
-                                <div className="flex flex-row gap-2 items-center">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Цена
+                                </label>
+                                <div className="flex items-center gap-2">
                                     <input
                                         type="text"
-                                        className="block w-[97%] p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                        className="flex-grow p-2 border rounded-xl bg-transparent h-12 outline-none"
                                         value={price}
-                                        onChange={(e) => setPrice(e.target.value)}
+                                        onChange={e => setPrice(e.target.value)}
                                         required
                                     />
-                                    ₽
+                                    <span>₽</span>
                                 </div>
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Тип продления подписки</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Тип продления
+                                </label>
                                 <select
-                                    className="block w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
+                                    className="w-full p-2 border rounded-xl bg-transparent h-12 outline-none"
                                     value={renewalType}
-                                    onChange={(e) => setRenewalType(e.target.value)}
+                                    onChange={e => setRenewalType(e.target.value)}
                                     required
                                 >
                                     <option value="1">1 день</option>
@@ -166,42 +227,47 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                     <option value="365">12 месяцев</option>
                                 </select>
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Откуда оплачивается подписка (последние 4 цифры карты)</label>
-                                <div className="flex flex-row gap-1 items-center flex-shrink-0">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Карта (последние 4 цифры)
+                                </label>
+                                <div className="flex items-center gap-2">
                                     <input
                                         type="text"
-                                        className="block lg:w-[589px] sm:w-full p-2 border rounded-xl bg-transparent h-12 outline-none flex-shrink-0"
+                                        className="flex-grow p-2 border rounded-xl bg-transparent h-12 outline-none"
                                         value={paymentCard}
-                                        onChange={(e) => setPaymentCard(e.target.value)}
+                                        onChange={e => setPaymentCard(e.target.value)}
                                         maxLength={4}
                                         required
                                     />
-                                    <CreditCardIcon className='min-w-5 min-h-5 sm:hidden lg:block' />
+                                    <CreditCardIcon className="w-5 h-5 text-gray-500" />
                                 </div>
                             </div>
-                            <div className="mb-4 flex flex-col gap-4">
-                                <div className="flex gap-2 items-center">
-                                    <span>Подписка остановлена?</span>
+
+                            <div className="mb-4 flex flex-col gap-2">
+                                <label className="inline-flex items-center gap-2">
                                     <input
                                         type="checkbox"
                                         checked={isStopped}
-                                        onChange={(e) => setIsStopped(e.target.checked)}
+                                        onChange={e => setIsStopped(e.target.checked)}
                                     />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <span title='Если подписка личная, то она не будет видна у приглашённого пользователя'>Личная подписка?</span>
+                                    <span>Остановлена?</span>
+                                </label>
+                                <label className="inline-flex items-center gap-2">
                                     <input
                                         type="checkbox"
                                         checked={isPersonal}
-                                        onChange={(e) => setIsPersonal(e.target.checked)}
+                                        onChange={e => setIsPersonal(e.target.checked)}
                                     />
-                                </div>
+                                    <span>Личная подписка?</span>
+                                </label>
                             </div>
+
                             <div className="flex justify-end">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary bg-emerald-800 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl"
+                                    className="bg-emerald-800 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl"
                                 >
                                     Добавить
                                 </button>
@@ -210,21 +276,15 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                     </div>
                 </div>
             ) : (
-                <button className="
-                    btn btn-primary bg-emerald-800 hover:bg-emerald-700 
-                    fixed lg:bottom-10 lg:right-10 w-14 h-14 flex 
-                    justify-center items-center rounded-full 
-                    transition ease-in-out duration-200 hover:rotate-90 lg:z-[211]
-                    sm:z-[-1] sm:bottom-14 sm:right-2
-                "
-                    onClick={handleOpenClose}>
-                    <PlusIcon className='w-8 h-8 text-white' />
+                <button
+                    className="fixed lg:bottom-10 lg:right-10 w-14 h-14 bg-emerald-800 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center transition-transform hover:rotate-90"
+                    onClick={handleOpenClose}
+                >
+                    <PlusIcon className="w-8 h-8" />
                 </button>
             )}
-
-
         </>
-    )
+    );
 };
 
 export default AddSubscriptionButton;

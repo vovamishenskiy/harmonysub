@@ -97,6 +97,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
                         Войти
                     </button>
                     {errors.general && <p className="text-red-500 pt-2">{errors.general}</p>}
+                    <div className='-mb-4 mt-4 flex flex-row gap-2'>
+                        <span className='text-gray-400 tracking-[-3px]' style={{height: '1px', paddingTop: '1px'}}>&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;</span>
+                        <p className='text-gray-700'>или войти через</p>
+                        <span className='text-gray-400 tracking-[-3px]' style={{height: '1px', paddingTop: '1px'}}>&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;</span>
+                    </div>
                 </form>
 
                 {/* OAuth-кнопки */}
@@ -106,14 +111,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
                         className="w-fit bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-xl transition flex flex-row gap-3"
                     >
                         <Image width={24} height={24} src="/icons/github-mark-white.svg" alt="github icon" />
-                        Войти через GitHub
                     </button>
                     <button
                         onClick={redirectYandex}
                         className="w-fit bg-gray-950 hover:bg-gray-900 text-white py-2 px-4 rounded-xl transition flex flex-row gap-3"
                     >
                         <Image width={24} height={24} src="/icons/yandex.svg" alt="yandex icon" />
-                        Войти через Яндекс
                     </button>
                 </div>
             </div>

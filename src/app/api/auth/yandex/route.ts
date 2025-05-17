@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
         response_type: 'code',
         client_id: process.env.YANDEX_ID!,
         redirect_uri: redirectUri,
+        force_confirm: 'yes',
         state,
     });
 

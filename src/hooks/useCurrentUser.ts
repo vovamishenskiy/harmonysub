@@ -1,23 +1,31 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useLocalStorage } from './useLocalStorage';
 
 export function useCurrentUser() {
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-    const [username, setUsername] = useState<string | null>(null);
+    const [avatarUrl, setAvatarUrl] = useLocalStorage('avatar_url');
+    const [username, setUsername] = useLocalStorage('username');
     const [userId, setUserId] = useState<number | null>(null);
 
-    React.useEffect(() => {
-        const storedAvatar = localStorage.getItem('avatar_url');
-        const storedUser = localStorage.getItem('username');
-        setAvatarUrl(storedAvatar);
-        setUsername(storedUser);
-
-        if (storedUser) {
-            fetch(`/api/getUserData?username=${storedUser}`, { credentials: 'include' })
-                .then(res => res.ok ? res.json() : Promise.reject(res))
-                .then(data => setUserId(data.user_id))
-                .catch(console.error);
+    const fetchUserId = useCallback(async (storedUsername: string) => {
+        try {
+            const res = await fetch(`/api/getUserData?username=${encodeURIComponent(storedUsername)}`, {
+                credentials: 'include'
+            });
+            if (!res.ok) throw new Error('Fetch userId failed');
+            const data = await res.json();
+            setUserId(data.user_id);
+        } catch (err) {
+            console.error('Ошибка при получении userId:', err);
         }
     }, []);
 
-    return { avatarUrl, username, userId };
+    useEffect(() => {
+        if (username) {
+            fetchUserId(username);
+        } else {
+            setUserId(null);
+        }
+    }, [username, fetchUserId]);
+
+    return { avatarUrl, username, userId, setAvatarUrl, setUsername };
 }

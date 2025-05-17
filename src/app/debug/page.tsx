@@ -38,11 +38,11 @@ interface Invitation {
 }
 
 const DebugPage: React.FC = () => {
-  const [users, setUsers]             = useState<User[]>([]);
-  const [subscriptions, setSubs]      = useState<Subscription[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [subscriptions, setSubs] = useState<Subscription[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
-  const [error, setError]             = useState<string>('');
-  const [isAdmin, setIsAdmin]         = useState(false);
+  const [error, setError] = useState<string>('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   // Проверка админа
@@ -198,9 +198,9 @@ const DebugPage: React.FC = () => {
               <thead>
                 <tr className="bg-gray-100">
                   {[
-                    'subscription_id','user_id','title','start_date','expiry_date',
-                    'price','renewal_type','paid_from','status',
-                    'created_at','updated_at','is_locked','locked_by_user_id','creator_name'
+                    'subscription_id', 'user_id', 'title', 'start_date', 'expiry_date',
+                    'price', 'renewal_type', 'paid_from', 'status',
+                    'created_at', 'updated_at', 'is_locked', 'locked_by_user_id', 'creator_name'
                   ].map(col => (
                     <th key={col} className="p-2 border">{col}</th>
                   ))}

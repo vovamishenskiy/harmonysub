@@ -51,7 +51,6 @@ const ConnectTelegramButton = () => {
     if (loading) {
         return (
             <div className="flex flex-col">
-                <p className="text-xl mb-3">Настройки уведомлений</p>
                 <div className="pl-2">
                     <Skeleton />
                 </div>
@@ -61,7 +60,6 @@ const ConnectTelegramButton = () => {
 
     return (
         <div className="flex flex-col">
-            <p className="text-xl mb-3">Настройки уведомлений</p>
             {isConnected ? (
                 <div className="flex flex-col pl-2">
                     <div className="flex flex-row gap-2 items-start">

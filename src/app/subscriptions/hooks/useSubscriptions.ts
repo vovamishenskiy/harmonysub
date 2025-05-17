@@ -12,6 +12,7 @@ interface ISubscription {
     status: boolean;
     is_locked: boolean;
     locked_by_user_id: number | null;
+    logoUrl?: string;
 };
 
 export function useSubscriptions(pollInterval = 5000) {

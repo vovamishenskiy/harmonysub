@@ -4,10 +4,11 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { CreditCardIcon, PencilIcon, ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
 import { PlayIcon, StopIcon } from "@heroicons/react/24/solid";
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
-import { Divider } from "@nextui-org/divider";
 import EditSubscription from "@/components/EditSubscriptions";
 import { addDays, addMonths, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import Image from 'next/image';
+import { services, ServiceList } from '@/lib/services';
 
 interface ISubscription {
     subscription_id: number;
@@ -24,6 +25,7 @@ interface ISubscription {
 interface SubscriptionProps {
     subscription: ISubscription;
     onUpdate: () => void;
+    logoUrl?: string;
 }
 
 // Хук для получения текущего userId из localStorage
@@ -108,6 +110,8 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
         return diffDays <= 3;
     }, [expiryDate]);
 
+    const isExpired = useMemo(() => expiryDate.getTime() < Date.now(), [expiryDate]);
+
     const handleEdit = useCallback(async (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!currentUser) return;
@@ -128,29 +132,80 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
         setMobileDetailsOpen(open => !open);
     }, []);
 
+    const service = services.find(s => s.name === subscription.title);
+    const logoUrl = service?.logoUrl;
+
     return (
         <>
             {/* Desktop */}
-            <div className="lg:block sm:hidden">
-                <Card className="bg-slate-100 p-2 rounded-xl min-w-[300px]">
-                    <CardHeader className="flex items-center">
-                        <h2
-                            className="text-2xl cursor-pointer hover:text-emerald-700"
-                            onClick={handleEdit}
-                        >{subscription.title}</h2>
-                        {isExpiring && <span className="ml-auto px-2 py-1 text-sm text-white bg-red-500 rounded-full">Истекает</span>}
+            <div className="lg:block sm:hidden lg:h-[120px] min-w-[270px]">
+                <Card className='bg-slate-100 p-2 pb-6 rounded-xl w-full h-full'>
+                    <CardHeader className="flex items-center justify-between py-0">
+                        <div className="flex flex-row items-center gap-2 pr-3">
+                            {logoUrl && (
+                                <div className="w-8 h-8 rounded-xl overflow-hidden mt-[4px]">
+                                    <Image
+                                        src={logoUrl}
+                                        alt={subscription.title}
+                                        width={32}
+                                        height={32}
+                                        className="object-contain w-full h-full"
+                                    />
+                                </div>
+                            )}
+                            {!logoUrl && (
+                                <div className="w-8 h-8 rounded-xl bg-stone-200 flex items-center justify-center pt-1 pl-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 28" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                                    </svg>
+                                </div>
+                            )}
+                            <h2
+                                className="text-2xl cursor-pointer hover:text-emerald-700 pr-2 overflow-x-hidden max-w-[330px] whitespace-nowrap"
+                                onClick={handleEdit}
+                            >
+                                {subscription.title}
+                            </h2>
+                        </div>
+                        <div className='flex flex-col items-center justify-center h-8 pt-[2.9px]'>
+                            <p className='text-xl'>{formattedPrice}</p>
+                        </div>
                     </CardHeader>
-                    <Divider className="my-2" />
-                    <CardBody className="flex flex-col gap-2">
-                        <p>Цена: {formattedPrice}</p>
-                        <p>Срок: {renewalTypeLabel}</p>
-                        <p>Начало: {formattedStart}</p>
-                        <p>Окончание: {formattedExpiry}</p>
-                        <p className="flex items-center gap-2">
-                            Откуда: •••• {subscription.paid_from}
-                            <CreditCardIcon className="w-6 h-6" title="Карта оплаты" />
-                        </p>
-                        <p>Статус: {subscription.status ? 'остановлена' : 'действует'}</p>
+                    <CardBody className='py-0 mb-0 mt-auto'>
+                        {!subscription.status && !isExpiring && !isExpired &&
+                            <div className="flex flex-row gap-2">
+                                <span className="ml-10 px-2 py-1 text-sm text-black bg-[#80ed99BF] rounded-[10px] flex flex-row items-center justify-center">
+                                    Активна
+                                </span>
+                                <p className='pb-[4px]'>до {formattedExpiry}</p>
+                            </div>
+                        }
+                        {
+                            !subscription.status && isExpired &&
+                            <div className='flex flex-row items-center gap-2'>
+                                <span className="ml-10 px-2 py-1 text-sm text-red-700 bg-red-200 rounded-[10px] flex flex-row items-center justify-center">
+                                    Истекла
+                                </span>
+                                <p className='pb-[4px]'>до {formattedExpiry}</p>
+                            </div>
+                        }
+                        {subscription.status &&
+                            <div className="flex flex-row gap-2">
+                                <span className="ml-10 px-2 py-1 text-sm text-black bg-stone-200 rounded-[10px] flex flex-row items-center justify-center">
+                                    Отменена
+                                </span>
+                                <p className='pt-[1px]'>{formattedExpiry}</p>
+                            </div>
+                        }
+                        {!subscription.status && isExpiring && !isExpired &&
+                            <div className='flex flex-row items-center gap-2'>
+                                <span className="ml-10 px-2 py-1 text-sm text-red-700 bg-red-200 rounded-[10px] flex flex-row items-center justify-center">
+                                    <span className="inline-block w-2 h-2 bg-red-700 rounded-full animate-pulse mr-2" />
+                                    Истекает
+                                </span>
+                                <p className='pb-[4px]'>до {formattedExpiry}</p>
+                            </div>
+                        }
                     </CardBody>
                 </Card>
             </div>
