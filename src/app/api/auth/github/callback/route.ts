@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-const BASE_URL = process.env.NEXTAUTH_URL!; // e.g. "http://localhost:3000"
+const BASE_URL = process.env.GITHUB_URL!;
 
 export async function GET(req: NextRequest) {
     const url = req.nextUrl;

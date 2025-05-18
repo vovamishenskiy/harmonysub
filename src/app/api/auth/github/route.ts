@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
     const params = new URLSearchParams({
         client_id: process.env.GITHUB_ID!,
-        redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/github/callback`,
+        redirect_uri: `${process.env.GITHUB_URL}/api/auth/github/callback`,
         scope: 'read:user user:email',
         state,
         allow_signup: 'true',
