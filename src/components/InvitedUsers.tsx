@@ -82,13 +82,13 @@ const InvitedUsers: React.FC = () => {
     }
 
     return (
-        <div className='flex flex-col w-1/3'>
+        <div className='flex flex-col w-fit'>
             <h2 className='font-medium mb-2 mt-2'>Приглашённые пользователи</h2>
             {message && <p className='text-green-600 text-base'>{message}</p>}
             {error && <p className='text-red-500 text-base'>{error}</p>}
-            <ul className='flex flex-row flex-wrap gap-3'>
+            <ul className='flex flex-row flex-wrap gap-3 w-fit ml-auto mr-auto'>
                 {invitedUsers.map((invitedUser) => (
-                    <li key={invitedUser.invite_id}>
+                    <li key={invitedUser.invite_id} className='flex flex-col items-center justify-center w-fit gap-2 rounded-lg background-[rgb(241 245 249)] p-3'>
                         {invitedUser.recipientusername}
                         <button onClick={() => handleDelete(Number(userId))}>Удалить приглашение</button>
                     </li>
