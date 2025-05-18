@@ -22,7 +22,6 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    // форма
     const [subscriptionName, setSubscriptionName] = useState('');
     const [selectedService, setSelectedService] = useState<Service | null>(null);
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -35,6 +34,8 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
     const [username, setUsername] = useState<string | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const [imgError, setImgError] = useState(false)
 
     // закрытие дропдауна по клику вне
     useEffect(() => {
@@ -64,12 +65,6 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
         setOpen(o => !o);
     };
 
-    const handleSelectService = (svc: Service) => {
-        setSelectedService(svc);
-        setSubscriptionName(svc.name);
-        setDropdownOpen(false);
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!userId || !startDate) return;
@@ -92,7 +87,7 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
             paid_from: paymentCard,
             status: isStopped,
             personal: isPersonal,
-            logo_url: selectedService?.logoUrl || ''  // передаём URL логотипа
+            logo_url: selectedService?.logoUrl || ''
         };
 
         fetch('/api/addSubscription', {
@@ -134,7 +129,6 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                             <button onClick={handleOpenClose}><XMarkIcon className="w-6 h-6" /></button>
                         </div>
                         <form onSubmit={handleSubmit}>
-                            {/* Название + дропдаун */}
                             <div className="relative mb-4" ref={wrapperRef}>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Название подписки
@@ -164,7 +158,31 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                                         setDropdownOpen(false);
                                                     }}
                                                 >
-                                                    <Image src={service.logoUrl} width={24} height={24} alt={service.name} />
+                                                    {!imgError && service.logoUrl ? (
+                                                        <Image
+                                                            src={service.logoUrl}
+                                                            alt={service.name}
+                                                            width={24}
+                                                            height={24}
+                                                            onError={() => setImgError(true)}
+                                                            unoptimized
+                                                        />
+                                                    ) : (
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 28 28"
+                                                            strokeWidth={1.5}
+                                                            stroke="currentColor"
+                                                            className="w-6 h-6 text-gray-400"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                                                            />
+                                                        </svg>
+                                                    )}
                                                     <span>{service.name}</span>
                                                 </li>
                                             ))
@@ -173,7 +191,6 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                 )}
                             </div>
 
-                            {/* Остальные поля */}
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Дата начала подписки
@@ -216,6 +233,7 @@ const AddSubscriptionButton: React.FC<AddSubscriptionButtonProps> = ({ onUpdate 
                                     onChange={e => setRenewalType(e.target.value)}
                                     required
                                 >
+                                    <option value="0">Пробная</option>
                                     <option value="1">1 день</option>
                                     <option value="3">3 дня</option>
                                     <option value="7">7 дней</option>

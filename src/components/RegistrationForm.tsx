@@ -87,7 +87,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                 } catch (err) {
                     console.error('Не удалось отправить приветственное письмо:', err)
                 }
-                
+
                 setFormData({
                     name: '',
                     surname: '',
@@ -130,7 +130,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                     </p>
                     <div className="flex flex-col gap max-w-full w-1/2 mx-auto sm:w-full">
                         <div className="flex flex-col gap w-auto">
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <input
                                     type="text"
                                     name='name'
@@ -142,10 +142,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-invalid={!!errors.name}
                                     aria-describedby='name-error'
                                 />
-                                {errors.name && <p id='name-error' className='text-red-500'>{errors.name}</p>}
+                                {errors.name && <p id='name-error' className='text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]'>{errors.name}</p>}
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <input
                                     type="text"
                                     name='surname'
@@ -156,10 +156,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-invalid={!!errors.surname}
                                     aria-describedby='surname-error'
                                 />
-                                {errors.name && <p id='surname-error' className='text-red-500'>{errors.surname}</p>}
+                                {errors.name && <p id='surname-error' className='text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]'>{errors.surname}</p>}
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <select
                                     name="country"
                                     value={formData.country}
@@ -403,12 +403,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     <option value="ZM">Замбия</option>
                                     <option value="ZW">Зимбабве</option>
                                 </select>
-                                {errors.country && <p id="country-error" className="text-red-500">{errors.country}</p>}
+                                {errors.country && <p id="country-error" className="text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]">{errors.country}</p>}
                             </div>
                         </div>
 
                         <div className="flex flex-col gap w-auto">
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <input
                                     type="text"
                                     name='username'
@@ -419,10 +419,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-invalid={!!errors.username}
                                     aria-describedby='username-error'
                                 />
-                                {errors.name && <p id='username-error' className='text-red-500'>{errors.username}</p>}
+                                {errors.name && <p id='username-error' className='text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]'>{errors.username}</p>}
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <input
                                     type="email"
                                     name='email'
@@ -433,10 +433,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-invalid={!!errors.email}
                                     aria-describedby='email-error'
                                 />
-                                {errors.name && <p id='email-error' className='text-red-500'>{errors.email}</p>}
+                                {errors.name && <p id='email-error' className='text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]'>{errors.email}</p>}
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <input
                                     type="password"
                                     name='password'
@@ -447,10 +447,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-invalid={!!errors.password}
                                     aria-describedby='password-error'
                                 />
-                                {errors.name && <p id='password-error' className='text-red-500'>{errors.password}</p>}
+                                {errors.name && <p id='password-error' className='text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]'>{errors.password}</p>}
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
                                 <input
                                     type="password"
                                     name='confirmPassword'
@@ -461,7 +461,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegisterSuccess }
                                     aria-invalid={!!errors.confirmPassword}
                                     aria-describedby='confirmPassword-error'
                                 />
-                                {errors.name && <p id='confirmPassword-error' className='text-red-500'>{errors.confirmPassword}</p>}
+                                {errors.name && <p id='confirmPassword-error' className='text-red-500 absolute top-[50%] translate-y-[-50%] right-[-110px]'>{errors.confirmPassword}</p>}
                             </div>
                         </div>
 

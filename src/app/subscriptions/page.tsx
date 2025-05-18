@@ -30,13 +30,14 @@ const Subscriptions: React.FC = () => {
   const [showCancelled, setShowCancelled] = useState(false);
   const [showExpiring, setShowExpiring] = useState(false);
   const [showExpired, setShowExpired] = useState(false);
+  const [showTrial, setShowTrial] = useState(false);
 
   const handleUpdate = useCallback(() => {
     refetch();
   }, [refetch]);
 
   const filteredSubs = useMemo(() => {
-    if (!showExpiring && !showCancelled && !showExpired && !showActive) {
+    if (!showExpiring && !showCancelled && !showExpired && !showActive && !showTrial) {
       return subscriptions;
     }
 
@@ -50,13 +51,15 @@ const Subscriptions: React.FC = () => {
       const isExpiring = !isCancelled && delta >= 0 && delta <= EXPIRING_WINDOW;
       const isExpired = !isCancelled && delta < 0;
       const isActive = sub.status === false && !isExpiring && delta > 3;
+      const isTrial = sub.renewal_type === '0';
 
-      return (showActive && isActive)
+      return (showTrial && isTrial)
+        || (showActive && isActive)
         || (showExpiring && isExpiring)
         || (showCancelled && isCancelled)
         || (showExpired && isExpired);
     });
-  }, [subscriptions, showActive, showExpiring, showCancelled, showExpired]);
+  }, [subscriptions, showActive, showExpiring, showCancelled, showExpired, showTrial]);
 
   const skeletons = useMemo(() => {
     const count = subscriptions.length || 1;
@@ -110,6 +113,14 @@ const Subscriptions: React.FC = () => {
               : 'border-2 border-emerald-700 text-gray-800 bg-transparent'}`}
           >
             Активные
+          </button>
+          <button
+            onClick={() => setShowTrial(prev => !prev)}
+            className={`px-3 py-1 rounded-xl min-h-9 min-w-[125px] transition-all hover:text-emerald-900 ${showTrial
+              ? 'border-2 border-emerald-700 text-white bg-emerald-700 hover:text-white'
+              : 'border-2 border-emerald-700 text-gray-800 bg-transparent'}`}
+          >
+            Пробные
           </button>
           <button
             onClick={() => setShowExpiring(prev => !prev)}

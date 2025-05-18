@@ -9,6 +9,9 @@ const roboto = Roboto({ subsets: ["latin", "cyrillic"], weight: ['100', '300', '
 export const metadata: Metadata = {
   title: "Harmonysub",
   description: "Отслеживайте Ваши подписки",
+  icons: {
+    icon: './favicon.ico', 
+  }
 };
 
 export const viewport: Viewport = {

@@ -79,6 +79,7 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
     const currentUser = useCurrentUser();
     const [editing, setEditing] = useState(false);
     const [mobileDetailsOpen, setMobileDetailsOpen] = useState(false);
+    const [logoError, setLogoError] = useState(false)
 
     const expiryDate = useMemo(
         () => calculateExpiryDate(subscription.start_date, subscription.renewal_type),
@@ -142,7 +143,7 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
                 <Card className='bg-slate-100 p-2 pb-6 rounded-xl w-full h-full'>
                     <CardHeader className="flex items-center justify-between py-0">
                         <div className="flex flex-row items-center gap-2 pr-3">
-                            {logoUrl && (
+                            {logoUrl && !logoError ? (
                                 <div className="w-8 h-8 rounded-xl overflow-hidden mt-[4px]">
                                     <Image
                                         src={logoUrl}
@@ -150,13 +151,25 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
                                         width={32}
                                         height={32}
                                         className="object-contain w-full h-full"
+                                        onError={() => setLogoError(true)}
+                                        unoptimized
                                     />
                                 </div>
-                            )}
-                            {!logoUrl && (
+                            ) : (
                                 <div className="w-8 h-8 rounded-xl bg-stone-200 flex items-center justify-center pt-1 pl-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 28" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 28 28"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-6 h-6 text-gray-400"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                                        />
                                     </svg>
                                 </div>
                             )}
@@ -167,12 +180,22 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
                                 {subscription.title}
                             </h2>
                         </div>
-                        <div className='flex flex-col items-center justify-center h-8 pt-[2.9px]'>
-                            <p className='text-xl'>{formattedPrice}</p>
-                        </div>
+                        {subscription.renewal_type !== '0' &&
+                            <div className='flex flex-col items-center justify-center h-8 pt-[2.9px]'>
+                                <p className='text-xl'>{formattedPrice}</p>
+                            </div>
+                        }
                     </CardHeader>
                     <CardBody className='py-0 mb-0 mt-auto'>
-                        {!subscription.status && !isExpiring && !isExpired &&
+                        {subscription.renewal_type === '0' &&
+                            <div className="flex flex-row gap-2">
+                                <span className="ml-10 px-2 py-1 text-sm text-black bg-stone-300 rounded-[10px] flex flex-row items-center justify-center">
+                                    Пробная
+                                </span>
+                                <p className='pb-[4px]'>до {formattedExpiry}</p>
+                            </div>
+                        }
+                        {!subscription.status && !isExpiring && !isExpired && subscription.renewal_type !== '0' &&
                             <div className="flex flex-row gap-2">
                                 <span className="ml-10 px-2 py-1 text-sm text-black bg-[#80ed99BF] rounded-[10px] flex flex-row items-center justify-center">
                                     Активна
@@ -181,7 +204,7 @@ const Subscription: React.FC<SubscriptionProps> = React.memo(({ subscription, on
                             </div>
                         }
                         {
-                            !subscription.status && isExpired &&
+                            !subscription.status && isExpired && subscription.renewal_type !== '0' &&
                             <div className='flex flex-row items-center gap-2'>
                                 <span className="ml-10 px-2 py-1 text-sm text-red-700 bg-red-200 rounded-[10px] flex flex-row items-center justify-center">
                                     Истекла
